@@ -41,7 +41,7 @@ public class MecTeleController extends OpMode
             Strafe = Strafe/Magnitude;
         }
 
-        driveLeftFront.setPower(Speed + Turn + Strafe);
+        /*driveLeftFront.setPower(Speed + Turn + Strafe);
         if (driveLeftBack != null)
         {
             driveLeftBack.setPower(Speed - Turn - Strafe);
@@ -51,7 +51,7 @@ public class MecTeleController extends OpMode
         if (driveRightBack !=null)
         {
             driveRightBack.setPower(Speed - Turn + Strafe);
-        }
+        }*/
     }
 
     public void loop()

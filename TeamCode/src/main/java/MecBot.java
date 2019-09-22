@@ -3,6 +3,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -11,11 +12,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class MecBot
 {
+    private DcMotorImplEx driveLeftFront, driveRightFront, driveLeftBack, driveRightBack;
 
-        private DcMotorImplEx driveLeftFront = null;
-        private DcMotorImplEx driveLeftBack = null;
-        private DcMotorImplEx driveRightFront = null;
-        private DcMotorImplEx driveRightBack = null;
+        private LinearOpMode linearOpMode;
         Orientation angles;
         Acceleration gravity;
         int loops = 0;
@@ -26,7 +25,19 @@ public class MecBot
         private float roboDiameterCm = (float) (45.7 * Math.PI); // can be adjusted
         private float wheelCircIn = 4 * (float) Math.PI; //Circumference of wheels used
         private float wheelCircCm = (float) (9.8 * Math.PI);
-        LinearOpMode linearOpMode;
+
+    public MecBot(HardwareMap hardwareMap)
+    {
+        driveLeftFront = hardwareMap.get(DcMotorImplEx.class, "driveLeftFront");
+        driveRightFront = hardwareMap.get(DcMotorImplEx.class, "driveRightFront");
+        driveLeftBack = hardwareMap.get(DcMotorImplEx.class, "driveLeftBack");
+        driveRightBack = hardwareMap.get(DcMotorImplEx.class, "driveRightBack");
+        initMotorsAndMechParts(hardwareMap);
+    }
+
+    private void initMotorsAndMechParts(HardwareMap hardwareMap)
+    {
+    }
 
         public MecBot(HardwareMap hMap, LinearOpMode linearOpModeIN)
         {
@@ -54,11 +65,6 @@ public class MecBot
 
             stopAllMotors();
 
-        }
-
-        public MecBot(HardwareMap hMap)
-        {
-            initMotors(hMap);
         }
 
         public void driveStraight_Enc(float encoders, double pow)

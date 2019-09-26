@@ -32,7 +32,7 @@ public class MecBotCalibration extends LinearOpMode
         {
 
         }
-        mecBot.pivot_enc(25);//power is preset to 0.8 for pivots
+        /*mecBot.pivot_enc(25);//power is preset to 0.8 for pivots
         while (!gamepad1.a && !isStopRequested())
         {
 
@@ -71,6 +71,6 @@ public class MecBotCalibration extends LinearOpMode
         while (!gamepad1.y && !isStopRequested())
         {
 
-        }
+        }*/
     }
 }

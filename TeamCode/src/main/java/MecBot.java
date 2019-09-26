@@ -48,9 +48,10 @@ public class MecBot
         public void initMotors(HardwareMap hMap)
         {
             driveLeftFront = hMap.get(DcMotorImplEx.class, "driveLeftFront");
+            driveRightBack = hMap.get(DcMotorImplEx.class, "driveRightBack");
             driveLeftBack = hMap.get(DcMotorImplEx.class, "driveLeftBack");
             driveRightFront = hMap.get(DcMotorImplEx.class, "driveRightFront");
-            driveRightBack = hMap.get(DcMotorImplEx.class, "driveRightBack");
+
 
 
             driveRightFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -58,10 +59,10 @@ public class MecBot
             driveLeftFront.setDirection(DcMotorSimple.Direction.FORWARD);
             driveLeftBack.setDirection(DcMotorSimple.Direction.FORWARD);
 
-            driveRightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            driveRightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             driveLeftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            driveRightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             driveLeftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            driveRightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
             stopAllMotors();
 

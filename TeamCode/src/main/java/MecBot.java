@@ -72,17 +72,28 @@ public class MecBot
         {
             resetDriveEncoders();
             driveRightFront.setPower(pow);
+            driveLeftBack.setPower(pow);
             driveRightBack.setPower(pow);
             driveLeftFront.setPower(pow);
-            driveLeftBack.setPower(pow);
-            encoders=Math.abs(encoders);
-            
-            while (Math.abs(driveRightFront.getCurrentPosition()) < encoders && Math.abs(driveRightBack.getCurrentPosition()) < encoders && Math.abs(driveLeftFront.getCurrentPosition()) < encoders && Math.abs(driveLeftBack.getCurrentPosition()) < encoders)
 
+            linearOpMode.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+            linearOpMode.telemetry.addData("leftBack encoders: ", getLeftBackEncoderPos());
+            linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
+            linearOpMode.telemetry.addData("leftFront encoders: ", getLeftFrontEncoderPos());
+            linearOpMode.telemetry.update();
+
+            encoders=Math.abs(encoders);
+
+            while (Math.abs(driveRightFront.getCurrentPosition()) < encoders && Math.abs(driveLeftBack.getCurrentPosition()) < encoders && Math.abs(driveRightBack.getCurrentPosition()) < encoders && Math.abs(driveLeftFront.getCurrentPosition()) < encoders)
             {
 
             }
             stopAllMotors();
+            linearOpMode.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+            linearOpMode.telemetry.addData("leftBack encoders: ", getLeftBackEncoderPos());
+            linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
+            linearOpMode.telemetry.addData("leftFront encoders: ", getLeftFrontEncoderPos());
+            linearOpMode.telemetry.update();
         }
 
         public void driveMotorsAuto(float lPow, float rPow)

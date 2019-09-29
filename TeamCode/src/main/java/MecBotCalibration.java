@@ -13,6 +13,7 @@ public class MecBotCalibration extends LinearOpMode
         mecBot = new MecBot(hardwareMap, this);
         waitForStart();
         mecBot.driveStraight_Enc(500,.5f);
+
         while (!gamepad1.a && !isStopRequested())
         {
 

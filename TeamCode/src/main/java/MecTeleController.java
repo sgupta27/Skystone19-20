@@ -22,10 +22,10 @@ public class MecTeleController extends OpMode
         double Turn = gamepad1.left_stick_x;
         double Strafe = gamepad1.right_stick_x;
         double MAX_SPEED = 1.0;
-        holonomic(Speed, Turn, Strafe, MAX_SPEED);
+        holo.holonomic(Speed, Turn, Strafe, MAX_SPEED);
     }
 
-    public void holonomic(double Speed, double Turn, double Strafe, double MAX_SPEED)
+    /*public void holonomic(double Speed, double Turn, double Strafe, double MAX_SPEED)
     {
         //left front= +speed +turn +strafe
         //right front= +speed -turn -strafe
@@ -41,7 +41,7 @@ public class MecTeleController extends OpMode
             Strafe = Strafe/Magnitude;
         }
 
-        /*driveLeftFront.setPower(Speed + Turn + Strafe);
+        driveLeftFront.setPower(Speed + Turn + Strafe);
         if (driveLeftBack != null)
         {
             driveLeftBack.setPower(Speed - Turn - Strafe);
@@ -51,8 +51,8 @@ public class MecTeleController extends OpMode
         if (driveRightBack !=null)
         {
             driveRightBack.setPower(Speed - Turn + Strafe);
-        }*/
-    }
+        }
+    }*/
 
     public void loop()
     {

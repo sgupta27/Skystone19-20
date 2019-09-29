@@ -23,13 +23,13 @@ public class TensorFlowDecisionTree extends LinearOpMode
         {
 /*
             ArrayList<Recognition> closest = vuforiaFunctions.getTwoClosestRecognitions();
-            if(closest != null)
+            i    {
+                        telemetry.addData(temp.toString(), null);
+                f(closest != null)
             {
                 if ( closest.size() != 0)
                 {
                     for (Recognition temp : closest)
-                    {
-                        telemetry.addData(temp.toString(), null);
                         telemetry.addData("New line", null);
                     }
                 }

@@ -3,13 +3,11 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
+/*
 @Disabled
 @Autonomous(name = "CompRobotCalibration")
 public class CompRobotCalibration extends LinearOpMode
 {
-    CompRobot compRobot;
-
     public void runOpMode() throws InterruptedException
     {
         compRobot = new CompRobot(hardwareMap, this);
@@ -19,6 +17,8 @@ public class CompRobotCalibration extends LinearOpMode
         {
 
         }
+    CompRobot compRobot;
+
         compRobot.pivotenc(-50, .7f);
         while (!gamepad1.a && !isStopRequested())
         {
@@ -36,7 +36,7 @@ public class CompRobotCalibration extends LinearOpMode
 
 
         //DRIVESTRAIGHT STUFF
-        /*compRobot.driveStraight(50,.8f);
+        compRobot.driveStraight(50,.8f);
         while (!gamepad1.a && !isStopRequested())
         {
 
@@ -75,6 +75,6 @@ public class CompRobotCalibration extends LinearOpMode
         while (!gamepad1.y && !isStopRequested())
         {
 
-        }*/
+        }
     }
-}
+}*/

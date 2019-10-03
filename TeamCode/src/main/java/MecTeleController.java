@@ -56,18 +56,18 @@ public class MecTeleController extends OpMode
 
     public void loop()
     {
-        double Speed = -gamepad1.left_stick_y;
+        double Forward = gamepad1.left_stick_y; // this was -gamepad1.leftstick_y; AND also changed Speed to Forward
         double Strafe = gamepad1.left_stick_x;
         double Turn = gamepad1.right_stick_x;
         double RightY = gamepad1.right_stick_y;
         double MAX_SPEED = .5;
-        telemetry.addData("Speed: ", Speed);
+        telemetry.addData("Forward: ", Forward);
         telemetry.addData("Strafe: ", Strafe);
         telemetry.addData("Turn: ", Turn);
         telemetry.addData("Right Y: ", RightY);
         telemetry.addData("MAX_SPEED: ", MAX_SPEED);
         telemetry.update();
-        holo.holonomic(Turn, Strafe, Speed, MAX_SPEED);
+        holo.holonomic(Turn, Strafe, Forward, MAX_SPEED);
 
     }
 }

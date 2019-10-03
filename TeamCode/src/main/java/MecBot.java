@@ -68,6 +68,14 @@ public class MecBot
 
         }
 
+        public void checkEncTest()
+        {
+            linearOpMode.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+            linearOpMode.telemetry.addData("leftFront encoders: ", getLeftBackEncoderPos());
+            linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
+            linearOpMode.telemetry.addData("leftBack encoders: ", getLeftFrontEncoderPos());
+            linearOpMode.telemetry.update();
+        }
         public void driveStraight_Enc(float encoders, double pow)
         {
             resetDriveEncoders();
@@ -77,9 +85,9 @@ public class MecBot
             driveLeftFront.setPower(pow);
 
             linearOpMode.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
-            linearOpMode.telemetry.addData("leftBack encoders: ", getLeftBackEncoderPos());
+            linearOpMode.telemetry.addData("leftFront encoders: ", getLeftBackEncoderPos());
             linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
-            linearOpMode.telemetry.addData("leftFront encoders: ", getLeftFrontEncoderPos());
+            linearOpMode.telemetry.addData("leftBack encoders: ", getLeftFrontEncoderPos());
             linearOpMode.telemetry.update();
 
             encoders=Math.abs(encoders);
@@ -557,7 +565,7 @@ public class MecBot
             return angles.firstAngle;
         }
 
-        private void resetDriveEncoders()//sets encoders to 0 for motors
+        public void resetDriveEncoders()//sets encoders to 0 for motors
         {
             driveRightFront.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
             driveLeftFront.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);

@@ -429,32 +429,32 @@ public class MecBot
         stopAllMotors();
         stopDriveMotors();
     }
-    public void holonomic(double Turn, double Strafe, double Action3, double MAX_SPEED)
+    public void holonomic(double Turn, double Strafe, double Forward, double MAX_SPEED)
     {
-        //left front= +Turn +Strafe +Action3
-        //right front= +Turn -Strafe -Action3
-        //left rear= +Turn +Strafe -Action3
-        //right rear= +Turn -Strafe +Action3
+        //left front= +Turn +Strafe +Forward
+        //right front= +Turn -Strafe -Forward
+        //left rear= +Turn +Strafe -Forward
+        //right rear= +Turn -Strafe +Forward
 
-        double Magnitude = Math.abs(Turn) + Math.abs(Strafe) + Math.abs(Action3);
+        double Magnitude = Math.abs(Turn) + Math.abs(Strafe) + Math.abs(Forward);
         Magnitude = (Magnitude > 1) ? Magnitude: 1; //Set Scaling to keep -1 to +1 range
         if (Magnitude > 1)
         {
             Turn = Turn/Magnitude;
             Strafe = Strafe/Magnitude;
-            Action3 = Action3/Magnitude;
+            Forward = Forward/Magnitude;
         }
 
-        driveLeftFront.setPower(Turn + Strafe + Action3);
+        driveLeftFront.setPower(Turn + Strafe - Forward);
         if (driveLeftBack != null)
         {
-            driveLeftBack.setPower(Turn - Strafe - Action3);
+            driveLeftBack.setPower(Turn - Strafe - Forward);
         }
 
-        driveRightFront.setPower(Turn + Strafe - Action3);
+        driveRightFront.setPower(Turn + Strafe + Forward);
         if (driveRightBack !=null)
         {
-            driveRightBack.setPower(Turn - Strafe + Action3);
+            driveRightBack.setPower(Turn - Strafe + Forward);
         }
     }
     /*public void pivot_IMU(float degrees_IN)

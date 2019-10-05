@@ -9,6 +9,8 @@ public class MecTeleController extends OpMode
     private boolean toggleSpeedMode = false;
     private boolean hasSpeedModeBeenActivated = false;
 
+
+
     public void init()
     {
         holo = new MecBot(hardwareMap);
@@ -56,9 +58,9 @@ public class MecTeleController extends OpMode
 
     public void loop()
     {
-        double Forward = gamepad1.left_stick_y; // this was -gamepad1.leftstick_y; AND also changed Speed to Forward
-        double Strafe = gamepad1.left_stick_x;
-        double Turn = gamepad1.right_stick_x;
+        double Forward = -gamepad1.left_stick_y; // this was -gamepad1.leftstick_y; AND also changed Speed to Forward
+        double Strafe = -gamepad1.left_stick_x;
+        double Turn = -gamepad1.right_stick_x;
         double RightY = gamepad1.right_stick_y;
         double MAX_SPEED = .5;
         telemetry.addData("Forward: ", Forward);

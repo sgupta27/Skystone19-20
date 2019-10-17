@@ -468,6 +468,32 @@ public class MecBot
             driveRightBack.setPower(Turn - Strafe + Forward);
         }
     }
+    public int wait_for_robot(double maxLookDistance_in, int timeToCheck_ms, int maxWait_ms, boolean shiftLeft)
+    {
+        double sensorDist = 0; //Need to put in the sensor distance here
+        while (sensorDist <= maxLookDistance_in /*&& get time in here < maxWait*/)
+        {
+            linearOpMode.sleep(timeToCheck_ms);
+            sensorDist = 0; //Need to put in the sensor distance here
+            //Flash the lights however we wish to
+        }
+        //set the lights back to normal
+        if (true/*get time in here >= maxWait*/)
+        {
+            if (shiftLeft)//Left for now
+            {
+                strafe_enc(-2f);//Don't know how far we wish to move yet...
+                return -1;//Return the fact that we shifted left
+            } else //Right for now
+            {
+                strafe_enc(2f);//Don't know how far we wish to move yet...
+                return 1;//Return the fact that we shifted right
+            }
+        } else
+        {
+            return 0;//Return the fact that the object moved out of the way
+        }
+    }
     /*public void pivot_IMU(float degrees_IN)
     {
         pivot_IMU(degrees_IN, .8);

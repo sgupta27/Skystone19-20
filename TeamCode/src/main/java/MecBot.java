@@ -25,6 +25,9 @@ public class MecBot
         private float roboDiameterCm = (float) (45.7 * Math.PI); // can be adjusted
         private float wheelCircIn = 4 * (float) Math.PI; //Circumference of wheels used
         private float wheelCircCm = (float) (9.8 * Math.PI);
+        enum Result{
+            Left, Right, Moved;
+        }
 
     public MecBot(HardwareMap hardwareMap)
     {
@@ -467,6 +470,62 @@ public class MecBot
         {
             driveRightBack.setPower(Turn - Strafe + Forward);
         }
+    }
+    public MecBot.Result wait_for_robot(double maxLookDistance_in, int timeToCheck_ms, int maxWait_ms, boolean shiftLeft)
+    {
+        double sensorDist = 0; //Need to put in the sensor distance here
+        while (sensorDist <= maxLookDistance_in /*&& get time in here < maxWait*/)
+        {
+            linearOpMode.sleep(timeToCheck_ms);
+            sensorDist = 0; //Need to put in the sensor distance here
+            //Flash the lights however we wish to
+        }
+        //set the lights back to normal
+        if (true/*get time in here >= maxWait*/)
+        {
+            if (shiftLeft)//Left for now
+            {
+                strafe_enc(-2f);//Don't know how far we wish to move yet...
+                return Result.Left;//Return the fact that we shifted left
+            } else //Right for now
+            {
+                strafe_enc(2f);//Don't know how far we wish to move yet...
+                return Result.Right;//Return the fact that we shifted right
+            }
+        } else
+        {
+            return Result.Moved;//Return the fact that the object moved out of the way
+        }
+    }
+    public void driveStraight_Inches(float dist_in, double pow)
+    {
+        float encoders_count = 0;
+        encoders_count= (float) (22.62*dist_in - 13.02);
+
+        resetDriveEncoders();
+        holonomic(0,0, pow, 1);
+//            driveRightFront.setPower(pow);
+//            driveLeftBack.setPower(pow);
+//            driveRightBack.setPower(pow);
+//            driveLeftFront.setPower(pow);
+
+        linearOpMode.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+        linearOpMode.telemetry.addData("leftFront encoders: ", getLeftBackEncoderPos());
+        linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
+        linearOpMode.telemetry.addData("leftBack encoders: ", getLeftFrontEncoderPos());
+        linearOpMode.telemetry.update();
+
+
+        while (Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
+        {
+
+        }
+        stopAllMotors();
+        linearOpMode.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+        linearOpMode.telemetry.addData("leftBack encoders: ", getLeftBackEncoderPos());
+        linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
+        linearOpMode.telemetry.addData("leftFront encoders: ", getLeftFrontEncoderPos());
+        linearOpMode.telemetry.update();
     }
     /*public void pivot_IMU(float degrees_IN)
     {

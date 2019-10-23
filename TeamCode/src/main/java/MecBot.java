@@ -25,13 +25,17 @@ public class MecBot
         private float roboDiameterCm = (float) (45.7 * Math.PI); // can be adjusted
         private float wheelCircIn = 4 * (float) Math.PI; //Circumference of wheels used
         private float wheelCircCm = (float) (9.8 * Math.PI);
+        enum Result{
+            Left, Right, Moved;
+        }
 
     public MecBot(HardwareMap hardwareMap)
     {
-        driveLeftFront = hardwareMap.get(DcMotorImplEx.class, "driveLeftFront");
-        driveRightFront = hardwareMap.get(DcMotorImplEx.class, "driveRightFront");
-        driveLeftBack = hardwareMap.get(DcMotorImplEx.class, "driveLeftBack");
-        driveRightBack = hardwareMap.get(DcMotorImplEx.class, "driveRightBack");
+//        driveLeftFront = hardwareMap.get(DcMotorImplEx.class, "driveLeftFront");
+//        driveRightFront = hardwareMap.get(DcMotorImplEx.class, "driveRightFront");
+//        driveLeftBack = hardwareMap.get(DcMotorImplEx.class, "driveLeftBack");
+//        driveRightBack = hardwareMap.get(DcMotorImplEx.class, "driveRightBack");
+        initMotors(hardwareMap);
         initMotorsAndMechParts(hardwareMap);
     }
 
@@ -68,21 +72,41 @@ public class MecBot
 
         }
 
+        public void checkEncTest()
+        {
+            linearOpMode.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+            linearOpMode.telemetry.addData("leftFront encoders: ", getLeftBackEncoderPos());
+            linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
+            linearOpMode.telemetry.addData("leftBack encoders: ", getLeftFrontEncoderPos());
+            linearOpMode.telemetry.update();
+        }
         public void driveStraight_Enc(float encoders, double pow)
         {
             resetDriveEncoders();
-            driveRightFront.setPower(pow);
-            driveRightBack.setPower(pow);
-            driveLeftFront.setPower(pow);
-            driveLeftBack.setPower(pow);
-            encoders=Math.abs(encoders);
-            
-            while (Math.abs(driveRightFront.getCurrentPosition()) < encoders && Math.abs(driveRightBack.getCurrentPosition()) < encoders && Math.abs(driveLeftFront.getCurrentPosition()) < encoders && Math.abs(driveLeftBack.getCurrentPosition()) < encoders)
+            holonomic(0,0, pow, 1);
+//            driveRightFront.setPower(pow);
+//            driveLeftBack.setPower(pow);
+//            driveRightBack.setPower(pow);
+//            driveLeftFront.setPower(pow);
 
+            linearOpMode.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+            linearOpMode.telemetry.addData("leftFront encoders: ", getLeftBackEncoderPos());
+            linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
+            linearOpMode.telemetry.addData("leftBack encoders: ", getLeftFrontEncoderPos());
+            linearOpMode.telemetry.update();
+
+            encoders=Math.abs(encoders);
+
+            while (Math.abs(driveRightFront.getCurrentPosition()) < encoders && Math.abs(driveLeftBack.getCurrentPosition()) < encoders && Math.abs(driveRightBack.getCurrentPosition()) < encoders && Math.abs(driveLeftFront.getCurrentPosition()) < encoders)
             {
 
             }
             stopAllMotors();
+            linearOpMode.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+            linearOpMode.telemetry.addData("leftBack encoders: ", getLeftBackEncoderPos());
+            linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
+            linearOpMode.telemetry.addData("leftFront encoders: ", getLeftFrontEncoderPos());
+            linearOpMode.telemetry.update();
         }
 
         public void driveMotorsAuto(float lPow, float rPow)
@@ -152,10 +176,11 @@ public class MecBot
 
     public void stopDriveMotors()
         {
-            driveLeftFront.setPower(0);
-            driveLeftBack.setPower(0);
-            driveRightFront.setPower(0);
-            driveRightBack.setPower(0);
+            holonomic(0,0,0,0);
+//            driveLeftFront.setPower(0);
+//            driveLeftBack.setPower(0);
+//            driveRightFront.setPower(0);
+//            driveRightBack.setPower(0);
         }
 
         public void spin_Right(float degrees)
@@ -297,17 +322,19 @@ public class MecBot
 
             if (encoder < 0) //Pivot Counterclockwise
             {
-                driveRightFront.setPower(.8);
-                driveRightBack.setPower(.8);
-                driveLeftFront.setPower(-.8);
-                driveLeftBack.setPower(-.8);
+                holonomic(-.8, 0,0,1);
+//                driveRightFront.setPower(.8);
+//                driveRightBack.setPower(.8);
+//                driveLeftFront.setPower(-.8);
+//                driveLeftBack.setPower(-.8);
 
             } else //Clockwise
             {
-                driveRightFront.setPower(-.8);
-                driveRightBack.setPower(-.8);
-                driveLeftFront.setPower(.8);
-                driveLeftBack.setPower(.8);
+                holonomic(.8,0,0,1);
+//                driveRightFront.setPower(-.8);
+//                driveRightBack.setPower(-.8);
+//                driveLeftFront.setPower(.8);
+//                driveLeftBack.setPower(.8);
             }
             encoder=Math.abs(encoder);
 
@@ -333,16 +360,18 @@ public class MecBot
             //It pivots in the direction of how to unit circle spins
             if (degrees < 0) //Pivot Clockwise
             {
-                driveRightFront.setPower(-Math.abs(pow));
-                driveRightBack.setPower(-Math.abs(pow));
-                driveLeftFront.setPower(-Math.abs(pow));
-                driveLeftBack.setPower(-Math.abs(pow));
+                holonomic(-Math.abs(pow), 0,0,1);
+//                driveRightFront.setPower(-Math.abs(pow));
+//                driveRightBack.setPower(-Math.abs(pow));
+//                driveLeftFront.setPower(-Math.abs(pow));
+//                driveLeftBack.setPower(-Math.abs(pow));
             } else //CounterClockwise
             {
-                driveRightFront.setPower(Math.abs(pow));
-                driveRightBack.setPower(Math.abs(pow));
-                driveLeftFront.setPower(Math.abs(pow));
-                driveLeftBack.setPower(Math.abs(pow));
+                holonomic(Math.abs(pow),0,0,1);
+//                driveRightFront.setPower(Math.abs(pow));
+//                driveRightBack.setPower(Math.abs(pow));
+//                driveLeftFront.setPower(Math.abs(pow));
+//                driveLeftBack.setPower(Math.abs(pow));
             }
 
             while (Math.abs(driveLeftFront.getCurrentPosition()) < encTarget && Math.abs(driveRightFront.getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested())
@@ -361,17 +390,19 @@ public class MecBot
             //It pivots in the direction of how to unit circle spins
             if (degrees < 0) //Pivot Clockwise
             {
-                driveRightFront.setPower(-Math.abs(pow));
-                driveRightBack.setPower(-Math.abs(pow));
-                driveLeftFront.setPower(-Math.abs(pow));
-                driveLeftBack.setPower(-Math.abs(pow));
+                holonomic(-Math.abs(pow),0,0,1);
+//                driveRightFront.setPower(-Math.abs(pow));
+//                driveRightBack.setPower(-Math.abs(pow));
+//                driveLeftFront.setPower(-Math.abs(pow));
+//                driveLeftBack.setPower(-Math.abs(pow));
             }
             else //CounterClockwise
             {
-                driveRightFront.setPower(Math.abs(pow));
-                driveRightBack.setPower(Math.abs(pow));
-                driveLeftFront.setPower(Math.abs(pow));
-                driveLeftBack.setPower(Math.abs(pow));
+                holonomic(Math.abs(pow),0,0,1);
+//                driveRightFront.setPower(Math.abs(pow));
+//                driveRightBack.setPower(Math.abs(pow));
+//                driveLeftFront.setPower(Math.abs(pow));
+//                driveLeftBack.setPower(Math.abs(pow));
             }
 
             while (Math.abs(driveLeftFront.getCurrentPosition()) < encTarget && Math.abs(driveRightFront.getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested())
@@ -387,17 +418,19 @@ public class MecBot
 
         if (encoder < 0) //left
         {
-            driveRightFront.setPower(.8);
-            driveRightBack.setPower(-.8);
-            driveLeftFront.setPower(-.8);
-            driveLeftBack.setPower(.8);
+            holonomic(0,-.8,0,1);
+//            driveRightFront.setPower(.8);
+//            driveRightBack.setPower(-.8);
+//            driveLeftFront.setPower(-.8);
+//            driveLeftBack.setPower(.8);
 
         } else //right
         {
-            driveRightFront.setPower(-.8);
-            driveRightBack.setPower(.8);
-            driveLeftFront.setPower(.8);
-            driveLeftBack.setPower(-.8);
+            holonomic(0,.8,0,1);
+//            driveRightFront.setPower(-.8);
+//            driveRightBack.setPower(.8);
+//            driveLeftFront.setPower(.8);
+//            driveLeftBack.setPower(-.8);
         }
         encoder=Math.abs(encoder);
 
@@ -426,10 +459,10 @@ public class MecBot
             Forward = Forward/Magnitude;
         }
 
-        driveLeftFront.setPower(Turn + Strafe - Forward);
+        driveLeftFront.setPower(-Turn - Strafe + Forward);
         if (driveLeftBack != null)
         {
-            driveLeftBack.setPower(Turn - Strafe - Forward);
+            driveLeftBack.setPower(-Turn + Strafe + Forward);
         }
 
         driveRightFront.setPower(Turn + Strafe + Forward);
@@ -437,6 +470,62 @@ public class MecBot
         {
             driveRightBack.setPower(Turn - Strafe + Forward);
         }
+    }
+    public MecBot.Result wait_for_robot(double maxLookDistance_in, int timeToCheck_ms, int maxWait_ms, boolean shiftLeft)
+    {
+        double sensorDist = 0; //Need to put in the sensor distance here
+        while (sensorDist <= maxLookDistance_in /*&& get time in here < maxWait*/)
+        {
+            linearOpMode.sleep(timeToCheck_ms);
+            sensorDist = 0; //Need to put in the sensor distance here
+            //Flash the lights however we wish to
+        }
+        //set the lights back to normal
+        if (true/*get time in here >= maxWait*/)
+        {
+            if (shiftLeft)//Left for now
+            {
+                strafe_enc(-2f);//Don't know how far we wish to move yet...
+                return Result.Left;//Return the fact that we shifted left
+            } else //Right for now
+            {
+                strafe_enc(2f);//Don't know how far we wish to move yet...
+                return Result.Right;//Return the fact that we shifted right
+            }
+        } else
+        {
+            return Result.Moved;//Return the fact that the object moved out of the way
+        }
+    }
+    public void driveStraight_Inches(float dist_in, double pow)
+    {
+        float encoders_count = 0;
+        encoders_count= (float) (22.62*dist_in - 13.02);
+
+        resetDriveEncoders();
+        holonomic(0,0, pow, 1);
+//            driveRightFront.setPower(pow);
+//            driveLeftBack.setPower(pow);
+//            driveRightBack.setPower(pow);
+//            driveLeftFront.setPower(pow);
+
+        linearOpMode.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+        linearOpMode.telemetry.addData("leftFront encoders: ", getLeftBackEncoderPos());
+        linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
+        linearOpMode.telemetry.addData("leftBack encoders: ", getLeftFrontEncoderPos());
+        linearOpMode.telemetry.update();
+
+
+        while (Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
+        {
+
+        }
+        stopAllMotors();
+        linearOpMode.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+        linearOpMode.telemetry.addData("leftBack encoders: ", getLeftBackEncoderPos());
+        linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
+        linearOpMode.telemetry.addData("leftFront encoders: ", getLeftFrontEncoderPos());
+        linearOpMode.telemetry.update();
     }
     /*public void pivot_IMU(float degrees_IN)
     {
@@ -509,10 +598,11 @@ public class MecBot
         }
         public void stopAllMotors()
         {
-            driveLeftFront.setPower(0);
-            driveLeftBack.setPower(0);
-            driveRightFront.setPower(0);
-            driveRightBack.setPower(0);
+            holonomic(0,0,0,0);
+//            driveLeftFront.setPower(0);
+//            driveLeftBack.setPower(0);
+//            driveRightFront.setPower(0);
+//            driveRightBack.setPower(0);
         }
 
     /*public void initIMU()
@@ -546,7 +636,7 @@ public class MecBot
             return angles.firstAngle;
         }
 
-        private void resetDriveEncoders()//sets encoders to 0 for motors
+        public void resetDriveEncoders()//sets encoders to 0 for motors
         {
             driveRightFront.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
             driveLeftFront.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);

@@ -27,7 +27,8 @@ public class MecTestTele extends OpMode
     {
         if (gamepad1.b)
         {
-            holo.driveStraight_Enc(100f, .5);
+            //holo.driveStraight_Enc(100f, .5);
+            holo.driveStraight_Inches(12, .8);
         }
         else
         {
@@ -35,7 +36,8 @@ public class MecTestTele extends OpMode
         }
         if (gamepad1.a)
         {
-            holo.pivot_enc(1500);
+            //holo.pivot_enc(1500);
+            holo.driveStrafe_Inches(12, .8);
         }
         else
         {
@@ -43,7 +45,8 @@ public class MecTestTele extends OpMode
         }
         if (gamepad1.y)
         {
-            holo.strafe_enc(-150);
+            //holo.strafe_enc(-150);
+            holo.drivePivot_Degrees(90, .8);
         }
         else
         {
@@ -51,7 +54,8 @@ public class MecTestTele extends OpMode
         }
         if (gamepad1.x)
         {
-            holo.strafe_enc(150);
+            //holo.strafe_enc(150);
+            holo.driveStrafe_Inches(-12, .8);
         }
         else
         {

@@ -2,12 +2,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class MecBot
@@ -15,6 +18,7 @@ public class MecBot
     private DcMotorImplEx driveLeftFront, driveRightFront, driveLeftBack, driveRightBack;
 
         private LinearOpMode linearOpMode;
+        private DistanceSensor frontDistSens;
         Orientation angles;
         Acceleration gravity;
         int loops = 0;
@@ -25,6 +29,7 @@ public class MecBot
         private float roboDiameterCm = (float) (45.7 * Math.PI); // can be adjusted
         private float wheelCircIn = 4 * (float) Math.PI; //Circumference of wheels used
         private float wheelCircCm = (float) (9.8 * Math.PI);
+        private ElapsedTime runtime = new ElapsedTime();
         enum Result{
             Left, Right, Moved;
         }
@@ -39,7 +44,7 @@ public class MecBot
         initMotorsAndMechParts(hardwareMap);
     }
 
-    private void initMotorsAndMechParts(HardwareMap hardwareMap)
+    private void initMotorsAndMechParts(HardwareMap hMap)
     {
     }
 
@@ -55,6 +60,7 @@ public class MecBot
             driveRightBack = hMap.get(DcMotorImplEx.class, "driveRightBack");
             driveLeftBack = hMap.get(DcMotorImplEx.class, "driveLeftBack");
             driveRightFront = hMap.get(DcMotorImplEx.class, "driveRightFront");
+            frontDistSens = hMap.get(DistanceSensor.class, "frontDistSens");
 
 
 
@@ -471,17 +477,25 @@ public class MecBot
             driveRightBack.setPower(Turn - Strafe + Forward);
         }
     }
-    public MecBot.Result wait_for_robot(double maxLookDistance_in, int timeToCheck_ms, int maxWait_ms, boolean shiftLeft)
+    public MecBot.Result wait_for_robot(double maxLookDistance_in, long timeToCheck_ms, int maxWait_ms, boolean shiftLeft)
     {
-        double sensorDist = 0; //Need to put in the sensor distance here
-        while (sensorDist <= maxLookDistance_in /*&& get time in here < maxWait*/)
+        double sensorDist = getFrontDistance_IN();
+        runtime.reset();
+        while (sensorDist <= maxLookDistance_in && runtime.time() < maxWait_ms)
         {
-            linearOpMode.sleep(timeToCheck_ms);
-            sensorDist = 0; //Need to put in the sensor distance here
+            //linearOpMode.sleep(timeToCheck_ms);
+            sensorDist = getFrontDistance_IN();
+            //linearOpMode.telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
+            //linearOpMode.telemetry.addData("sensorDistance: ", sensorDist);
+            //linearOpMode.telemetry.addData("maxWait_ms: ", maxWait_ms);
+            //linearOpMode.telemetry.addData("Time ran for: ", runtime.time());
+            //linearOpMode.telemetry.addData("timeToCheck_ms: ", timeToCheck_ms);
+            //linearOpMode.telemetry.addData("Shifting Left: ", shiftLeft);
+            //linearOpMode.telemetry.update();
             //Flash the lights however we wish to
         }
         //set the lights back to normal
-        if (true/*get time in here >= maxWait*/)
+        if (runtime.time() >= maxWait_ms)
         {
             if (shiftLeft)//Left for now
             {
@@ -657,7 +671,16 @@ public class MecBot
     }*/
 
 
-        public double anglePerpToGrav()
+    public DistanceSensor getFrontDistSens()
+    {
+        return frontDistSens;
+    }
+
+    public double getFrontDistance_IN()
+    {
+        return frontDistSens.getDistance(DistanceUnit.INCH);
+    }
+    public double anglePerpToGrav()
         {
             return Math.atan(gravity.yAccel / gravity.zAccel);
         }

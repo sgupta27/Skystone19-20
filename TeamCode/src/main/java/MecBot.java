@@ -511,17 +511,17 @@ public class MecBot
             return Result.Moved;//Return the fact that the object moved out of the way
         }
     }
-    public void driveStraight_Inches(float dist_in, double pow)
+    public void driveStraight_Inches(float dist_in, double pow)// this is the correct drive straight inches derived from our linear regression as of oct 23
     {
         float encoders_count = 0;
         encoders_count= (float) (22.62*dist_in - 13.02);
 
         resetDriveEncoders();
         holonomic(0,0, pow, 1);
-//            driveRightFront.setPower(pow);
-//            driveLeftBack.setPower(pow);
-//            driveRightBack.setPower(pow);
-//            driveLeftFront.setPower(pow);
+           driveRightFront.setPower(pow);
+           driveLeftBack.setPower(pow);
+           driveRightBack.setPower(pow);
+           driveLeftFront.setPower(pow);
 
         linearOpMode.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
         linearOpMode.telemetry.addData("leftFront encoders: ", getLeftBackEncoderPos());
@@ -540,6 +540,42 @@ public class MecBot
         linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
         linearOpMode.telemetry.addData("leftFront encoders: ", getLeftFrontEncoderPos());
         linearOpMode.telemetry.update();
+    }
+    public void driveStrafe_Inches(float dist_in, double pow)
+    {
+        float encoders_count = 0;
+        encoders_count= (float) (24.83*dist_in - 7.55);
+
+        resetDriveEncoders();
+        holonomic(0,0, pow, 1);
+           driveRightFront.setPower(pow);
+           driveLeftBack.setPower(pow);
+           driveRightBack.setPower(pow);
+           driveLeftFront.setPower(pow);
+
+        while (Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
+        {
+
+        }
+        stopAllMotors();
+    }
+    public void drivePivot_Degrees(float angle_deg, double pow)
+    {
+        float encoders_count = 0;
+        encoders_count = (float) (6.57 * angle_deg - 12.24);
+
+        resetDriveEncoders();
+        holonomic(0, 0, pow, 1);
+           driveRightFront.setPower(-pow);
+           driveLeftBack.setPower(pow);
+           driveRightBack.setPower(-pow);
+           driveLeftFront.setPower(pow);
+
+        while (Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
+        {
+
+        }
+        stopAllMotors();
     }
     /*public void pivot_IMU(float degrees_IN)
     {

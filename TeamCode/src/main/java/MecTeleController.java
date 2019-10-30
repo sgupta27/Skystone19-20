@@ -63,13 +63,25 @@ public class MecTeleController extends OpMode
         double Turn = -gamepad1.right_stick_x;
         double RightY = gamepad1.right_stick_y;
         double MAX_SPEED = .5;
-        telemetry.addData("Forward: ", Forward);
+        double maxLookDistance_in = 12;
+        long timeToCheck_ms = 50;
+        int maxWait_ms = 5000;
+        boolean shiftLeft = true;
+        double distance = holo.getFrontDistance_IN();
+        /*telemetry.addData("Forward: ", Forward); //Removed for testing
         telemetry.addData("Strafe: ", Strafe);
         telemetry.addData("Turn: ", Turn);
         telemetry.addData("Right Y: ", RightY);
         telemetry.addData("MAX_SPEED: ", MAX_SPEED);
-        telemetry.update();
-        holo.holonomic(Turn, Strafe, Forward, MAX_SPEED);
-
+        telemetry.update();*/
+        //telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
+        //telemetry.addData("maxWait_ms: ", maxWait_ms);
+        //telemetry.addData("timeToCheck_ms: ", timeToCheck_ms);
+        //telemetry.addData("Distance Sensor Value: ", distance);
+        //telemetry.addData("Shifting Left: ", shiftLeft);
+        //telemetry.addData("Hello?: ", "yes I am here");
+        //telemetry.update();
+        //holo.holonomic(Turn, Strafe, Forward, MAX_SPEED);
+        holo.wait_for_robot(maxLookDistance_in, timeToCheck_ms, maxWait_ms, shiftLeft);
     }
 }

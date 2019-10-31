@@ -25,42 +25,30 @@ public class MecTestTele extends OpMode
 
     public void loop()
     {
-        if (gamepad1.b)
+        if (gamepad1.a)
         {
             //holo.driveStraight_Enc(100f, .5);
             holo.driveStraight_Inches(12, .8);
         }
-        else
-        {
-            holo.driveRightFront(0f);
-        }
-        if (gamepad1.a)
+
+        if (gamepad1.b)
         {
             //holo.pivot_enc(1500);
             holo.driveStrafe_Inches(12, .8);
         }
-        else
-        {
-            holo.driveRightBack(0f);
-        }
-        if (gamepad1.y)
+
+        if (gamepad1.x)
         {
             //holo.strafe_enc(-150);
-            holo.drivePivot_Degrees(90, .8);
+            holo.drivePivot_Degrees(-90, .8);
         }
-        else
-        {
-            holo.driveLeftFront(0f);
-        }
-        if (gamepad1.x)
+
+        if (gamepad1.y)
         {
             //holo.strafe_enc(150);
             holo.driveStrafe_Inches(-12, .8);
         }
-        else
-        {
-            holo.driveLeftBack(0f);
-        }
+
         /*if (toggleSpeedMode)
         {
             telemetry.addData("Speed mode = ON", null);

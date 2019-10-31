@@ -68,12 +68,12 @@ public class MecTeleController extends OpMode
         int maxWait_ms = 5000;
         boolean shiftLeft = true;
         double distance = holo.getFrontDistance_IN();
-        /*telemetry.addData("Forward: ", Forward); //Removed for testing
+        telemetry.addData("Forward: ", Forward); //Removed for testing
         telemetry.addData("Strafe: ", Strafe);
         telemetry.addData("Turn: ", Turn);
         telemetry.addData("Right Y: ", RightY);
         telemetry.addData("MAX_SPEED: ", MAX_SPEED);
-        telemetry.update();*/
+        telemetry.update();
         //telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
         //telemetry.addData("maxWait_ms: ", maxWait_ms);
         //telemetry.addData("timeToCheck_ms: ", timeToCheck_ms);
@@ -81,7 +81,7 @@ public class MecTeleController extends OpMode
         //telemetry.addData("Shifting Left: ", shiftLeft);
         //telemetry.addData("Hello?: ", "yes I am here");
         //telemetry.update();
-        //holo.holonomic(Turn, Strafe, Forward, MAX_SPEED);
+        holo.holonomic(Turn, Strafe, Forward, MAX_SPEED);
         holo.wait_for_robot(maxLookDistance_in, timeToCheck_ms, maxWait_ms, shiftLeft);
     }
 }

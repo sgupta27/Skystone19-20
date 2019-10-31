@@ -483,15 +483,16 @@ public class MecBot
         runtime.reset();
         while (sensorDist <= maxLookDistance_in && runtime.time() < maxWait_ms)
         {
-            //linearOpMode.sleep(timeToCheck_ms);
+            linearOpMode.sleep(timeToCheck_ms);
             sensorDist = getFrontDistance_IN();
-            //linearOpMode.telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
+            linearOpMode.telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
             //linearOpMode.telemetry.addData("sensorDistance: ", sensorDist);
-            //linearOpMode.telemetry.addData("maxWait_ms: ", maxWait_ms);
+            linearOpMode.telemetry.addData("maxWait_ms: ", maxWait_ms);
             //linearOpMode.telemetry.addData("Time ran for: ", runtime.time());
-            //linearOpMode.telemetry.addData("timeToCheck_ms: ", timeToCheck_ms);
-            //linearOpMode.telemetry.addData("Shifting Left: ", shiftLeft);
-            //linearOpMode.telemetry.update();
+            linearOpMode.telemetry.addData("timeToCheck_ms: ", timeToCheck_ms);
+            linearOpMode.telemetry.addData("Shifting Left: ", shiftLeft);
+            linearOpMode.telemetry.addData("Outside: ", false);
+            linearOpMode.telemetry.update();
             //Flash the lights however we wish to
         }
         //set the lights back to normal

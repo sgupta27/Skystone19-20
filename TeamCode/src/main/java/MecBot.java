@@ -321,8 +321,6 @@ public class MecBot
         }*/
         public void pivot_enc(double encoder)//Utilizes two motors at a time; spins in place
         {
-
-
             //It pivots in the direction of how to unit circle spins
             resetDriveEncoders();
 
@@ -353,70 +351,7 @@ public class MecBot
             stopAllMotors();
             stopDriveMotors();
         }
-        public void pivot_deg(float degrees)
-        {
-            pivot(degrees, .8);
-        }
-        public void pivot_degpow(double degrees, double pow)//Utilizes two motors at a time; spins in place
-        {
 
-            double encTarget;
-            encTarget = Math.abs(17.254 * Math.abs(degrees) + 367.295);
-
-            //It pivots in the direction of how to unit circle spins
-            if (degrees < 0) //Pivot Clockwise
-            {
-                holonomic(-Math.abs(pow), 0,0,1);
-//                driveRightFront.setPower(-Math.abs(pow));
-//                driveRightBack.setPower(-Math.abs(pow));
-//                driveLeftFront.setPower(-Math.abs(pow));
-//                driveLeftBack.setPower(-Math.abs(pow));
-            } else //CounterClockwise
-            {
-                holonomic(Math.abs(pow),0,0,1);
-//                driveRightFront.setPower(Math.abs(pow));
-//                driveRightBack.setPower(Math.abs(pow));
-//                driveLeftFront.setPower(Math.abs(pow));
-//                driveLeftBack.setPower(Math.abs(pow));
-            }
-
-            while (Math.abs(driveLeftFront.getCurrentPosition()) < encTarget && Math.abs(driveRightFront.getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested())
-            {
-            }
-            stopAllMotors();
-            stopDriveMotors();
-        }
-
-        public void pivot(float degrees, double pow)//Utilizes two motors at a time; spins in place
-        {
-
-            double encTarget;
-            encTarget = Math.abs(17.254 * Math.abs(degrees) + 367.295);
-
-            //It pivots in the direction of how to unit circle spins
-            if (degrees < 0) //Pivot Clockwise
-            {
-                holonomic(-Math.abs(pow),0,0,1);
-//                driveRightFront.setPower(-Math.abs(pow));
-//                driveRightBack.setPower(-Math.abs(pow));
-//                driveLeftFront.setPower(-Math.abs(pow));
-//                driveLeftBack.setPower(-Math.abs(pow));
-            }
-            else //CounterClockwise
-            {
-                holonomic(Math.abs(pow),0,0,1);
-//                driveRightFront.setPower(Math.abs(pow));
-//                driveRightBack.setPower(Math.abs(pow));
-//                driveLeftFront.setPower(Math.abs(pow));
-//                driveLeftBack.setPower(Math.abs(pow));
-            }
-
-            while (Math.abs(driveLeftFront.getCurrentPosition()) < encTarget && Math.abs(driveRightFront.getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested())
-            {
-            }
-            stopAllMotors();
-            stopDriveMotors();
-        }
     public void strafe_enc(double encoder)//Utilizes two motors at a time; spins in place
     {
     //It pivots in the direction of how to unit circle spins
@@ -566,7 +501,7 @@ public class MecBot
     {
         resetDriveEncoders();
 
-        if (angle_deg < 0) //Pivot Counterclockwise
+        if (angle_deg < 0) //Pivot clockwise
         {
             holonomic(-pow, 0,0,1);
 //                driveRightFront.setPower(.8);
@@ -575,7 +510,7 @@ public class MecBot
 //                driveLeftBack.setPower(-.8);
 
         }
-        else //Clockwise
+        else //Counterclockwise
         {
             holonomic(pow,0,0,1);
 //                driveRightFront.setPower(-.8);

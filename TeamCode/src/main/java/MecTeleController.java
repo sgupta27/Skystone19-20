@@ -72,7 +72,7 @@ public class MecTeleController extends OpMode
         telemetry.addData("Strafe: ", Strafe);
         telemetry.addData("Turn: ", Turn);
         telemetry.addData("Right Y: ", RightY);
-        telemetry.addData("MAX_SPEED: ", MAX_SPEED);
+        telemetry.addData("MAX_SPEED: ", MAX_SPEED)
         telemetry.update();
         //telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
         //telemetry.addData("maxWait_ms: ", maxWait_ms);

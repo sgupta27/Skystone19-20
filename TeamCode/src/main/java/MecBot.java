@@ -476,23 +476,25 @@ public class MecBot
     public MecBot.Result wait_for_robot(double maxLookDistance_in, long timeToCheck_ms, int maxWait_ms, boolean shiftLeft)
     {
         double sensorDist = getFrontDistance_IN();
-        runtime.reset();
-        while (sensorDist <= maxLookDistance_in && runtime.time() < maxWait_ms)
+        maxWait_ms = 10;
+        resetRunTime();
+        while (sensorDist <= maxLookDistance_in && getRunTime() < maxWait_ms)
         {
-            linearOpMode.sleep(timeToCheck_ms);
+            //linearOpMode.sleep(100);
             sensorDist = getFrontDistance_IN();
-            linearOpMode.telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
+            //linearOpMode.telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
             //linearOpMode.telemetry.addData("sensorDistance: ", sensorDist);
-            linearOpMode.telemetry.addData("maxWait_ms: ", maxWait_ms);
-            //linearOpMode.telemetry.addData("Time ran for: ", runtime.time());
-            linearOpMode.telemetry.addData("timeToCheck_ms: ", timeToCheck_ms);
-            linearOpMode.telemetry.addData("Shifting Left: ", shiftLeft);
-            linearOpMode.telemetry.addData("Outside: ", false);
-            linearOpMode.telemetry.update();
+            //linearOpMode.telemetry.addData("maxWait_ms: ", maxWait_ms);
+            //linearOpMode.telemetry.addData("Time ran for: ", getRunTime());//returning null...
+            //linearOpMode.telemetry.addData("timeToCheck_ms: ", timeToCheck_ms);//same...
+            //linearOpMode.telemetry.addData("Shifting Left: ", shiftLeft);
+            //linearOpMode.telemetry.addData("Outside: ", false);
+            //linearOpMode.telemetry.addData("Output: ", "Currently Running");
+            //linearOpMode.telemetry.update();
             //Flash the lights however we wish to
         }
         //set the lights back to normal
-        if (runtime.time() >= maxWait_ms)
+        if (getRunTime() >= maxWait_ms)
         {
             if (shiftLeft)//Left for now
             {
@@ -692,6 +694,14 @@ public class MecBot
     public double getFrontDistance_IN()
     {
         return frontDistSens.getDistance(DistanceUnit.INCH);
+    }
+    public double getRunTime()
+    {
+        return runtime.time();
+    }
+    public void resetRunTime()
+    {
+        runtime.reset();
     }
     public double anglePerpToGrav()
         {

@@ -1,3 +1,4 @@
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -5,7 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.Servo;
+//import com.qualcomm.robotcore.hardware.Servo;
+
+
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -19,12 +22,12 @@ public class MecBot
 
         private LinearOpMode linearOpMode;
         private DistanceSensor frontDistSens;
+        RevBlinkinLedDriver lights;
         Orientation angles;
         Acceleration gravity;
         int loops = 0;
         double velocitiesR = 0;
         double velocitiesL = 0;
-
         private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
         private float roboDiameterCm = (float) (45.7 * Math.PI); // can be adjusted
         private float wheelCircIn = 4 * (float) Math.PI; //Circumference of wheels used
@@ -61,6 +64,7 @@ public class MecBot
             driveLeftBack = hMap.get(DcMotorImplEx.class, "driveLeftBack");
             driveRightFront = hMap.get(DcMotorImplEx.class, "driveRightFront");
             frontDistSens = hMap.get(DistanceSensor.class, "frontDistSens");
+            lights = hMap.get(lights.getClass(), "blinkin");
 
 
 
@@ -412,24 +416,23 @@ public class MecBot
     {
         double sensorDist = getFrontDistance_IN();
         resetRunTime();
-        timeToCheck_ms = 100;
+        //timeToCheck_ms = 100;
         while (sensorDist <= maxLookDistance_in && getRunTime() < maxWait_s)
         {
-            //linearOpMode.sleep(timeToCheck_ms);
-            //linearOpMode.sleep(1);
+            linearOpMode.sleep(timeToCheck_ms);
             sensorDist = getFrontDistance_IN();
-            //linearOpMode.telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
-            //linearOpMode.telemetry.addData("sensorDistance: ", sensorDist);
-            //linearOpMode.telemetry.addData("maxWait_ms: ", maxWait_ms);
-            //linearOpMode.telemetry.addData("Time ran for: ", getRunTime());//returning null...
-            //linearOpMode.telemetry.addData("timeToCheck_ms: ", timeToCheck_ms);//same...
-            //linearOpMode.telemetry.addData("Shifting Left: ", shiftLeft);
-            //linearOpMode.telemetry.addData("Outside: ", false);
-            //linearOpMode.telemetry.addData("Output: ", "Currently Running");
-            //linearOpMode.telemetry.update();
-            //Flash the lights however we wish to
+            linearOpMode.telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
+            linearOpMode.telemetry.addData("sensorDistance: ", sensorDist);
+            linearOpMode.telemetry.addData("maxWait_ms: ", maxWait_s);
+            linearOpMode.telemetry.addData("Time ran for: ", getRunTime());
+            linearOpMode.telemetry.addData("timeToCheck_ms: ", timeToCheck_ms);
+            linearOpMode.telemetry.addData("Shifting Left: ", shiftLeft);
+            linearOpMode.telemetry.addData("Outside: ", false);
+            linearOpMode.telemetry.addData("Output: ", "Currently Running");
+            linearOpMode.telemetry.update();
+            //setLights(RevBlinkinLedDriver.BlinkinPattern.STROBE_GOLD);//flash lights
         }
-        //set the lights back to normal
+        //setLights(RevBlinkinLedDriver.BlinkinPattern.BLACK);//turn off here
         if (getRunTime() >= maxWait_s)
         {
             if (shiftLeft)//Left for now
@@ -631,6 +634,14 @@ public class MecBot
     {
         return frontDistSens.getDistance(DistanceUnit.INCH);
     }
+    //public void setLights(RevBlinkinLedDriver.BlinkinPattern pattern)
+    //{
+    //    lights.setPattern(pattern);
+    //}
+    //public class getLightsClass()
+    //{
+    //    return lights.getClass();
+    //}
     public double getRunTime()
     {
         return runtime.time();

@@ -1,7 +1,7 @@
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import java.lang.Thread;
 
-import static java.lang.Thread.sleep;
 
 @TeleOp(name = "MecTestWaitRobot")
 public class MecTestWaitRobot extends OpMode
@@ -25,12 +25,12 @@ public class MecTestWaitRobot extends OpMode
     {
         double maxLookDistance_in = 12;
         long timeToCheck_ms = 50;
-        int maxWait_ms = 5000;
-        boolean shiftLeft = true;
+        double maxWait_s = 3.9;//3.9 I think is max without getting stuck in loop without wait
+        boolean shiftLeft = false;
         double distance = holo.getFrontDistance_IN();
         double time = holo.getRunTime();
         telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
-        telemetry.addData("maxWait_ms: ", maxWait_ms);
+        telemetry.addData("maxWait_ms: ", maxWait_s);
         //telemetry.addData("timeToCheck_ms: ", timeToCheck_ms);
         telemetry.addData("sensorDistance: ", distance);
         telemetry.addData("Shifting Left: ", shiftLeft);
@@ -38,6 +38,6 @@ public class MecTestWaitRobot extends OpMode
         telemetry.addData("Outside: ", true);
         telemetry.addData("Output: ", result);
         telemetry.update();
-        result = holo.wait_for_robot(maxLookDistance_in, timeToCheck_ms, maxWait_ms, shiftLeft);
+        result = holo.wait_for_robot(maxLookDistance_in, timeToCheck_ms, maxWait_s, shiftLeft);
     }
 }

@@ -408,14 +408,15 @@ public class MecBot
             driveRightBack.setPower(Turn - Strafe + Forward);
         }
     }
-    public MecBot.Result wait_for_robot(double maxLookDistance_in, long timeToCheck_ms, int maxWait_ms, boolean shiftLeft)
+    public MecBot.Result wait_for_robot(double maxLookDistance_in, long timeToCheck_ms, double maxWait_s, boolean shiftLeft)
     {
         double sensorDist = getFrontDistance_IN();
-        maxWait_ms = 10;
         resetRunTime();
-        while (sensorDist <= maxLookDistance_in && getRunTime() < maxWait_ms)
+        timeToCheck_ms = 100;
+        while (sensorDist <= maxLookDistance_in && getRunTime() < maxWait_s)
         {
-            //linearOpMode.sleep(100);
+            //linearOpMode.sleep(timeToCheck_ms);
+            //linearOpMode.sleep(1);
             sensorDist = getFrontDistance_IN();
             //linearOpMode.telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
             //linearOpMode.telemetry.addData("sensorDistance: ", sensorDist);
@@ -429,15 +430,15 @@ public class MecBot
             //Flash the lights however we wish to
         }
         //set the lights back to normal
-        if (getRunTime() >= maxWait_ms)
+        if (getRunTime() >= maxWait_s)
         {
             if (shiftLeft)//Left for now
             {
-                strafe_enc(-2f);//Don't know how far we wish to move yet...
+                strafe_enc(30f);//Don't know how far we wish to move yet...
                 return Result.Left;//Return the fact that we shifted left
             } else //Right for now
             {
-                strafe_enc(2f);//Don't know how far we wish to move yet...
+                strafe_enc(-30f);//Don't know how far we wish to move yet...
                 return Result.Right;//Return the fact that we shifted right
             }
         } else

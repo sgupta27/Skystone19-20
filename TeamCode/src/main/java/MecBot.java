@@ -1,12 +1,18 @@
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import com.qualcomm.robotcore.hardware.Servo;
+import android.graphics.Color;
+
 //import com.qualcomm.robotcore.hardware.Servo;
+
 
 
 
@@ -28,14 +34,20 @@ public class MecBot
         int loops = 0;
         double velocitiesR = 0;
         double velocitiesL = 0;
+
+        private ColorSensor frontColorSens;
+ 
         private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
         private float roboDiameterCm = (float) (45.7 * Math.PI); // can be adjusted
         private float wheelCircIn = 4 * (float) Math.PI; //Circumference of wheels used
         private float wheelCircCm = (float) (9.8 * Math.PI);
         private ElapsedTime runtime = new ElapsedTime();
-        enum Result{
-            Left, Right, Moved;
-        }
+        public ColorSensor getFrontColorSens;
+
+    enum Result
+    {
+        Left, Right, Moved;
+    }
 
     public MecBot(HardwareMap hardwareMap)
     {
@@ -44,17 +56,22 @@ public class MecBot
 //        driveLeftBack = hardwareMap.get(DcMotorImplEx.class, "driveLeftBack");
 //        driveRightBack = hardwareMap.get(DcMotorImplEx.class, "driveRightBack");
         initMotors(hardwareMap);
-        initMotorsAndMechParts(hardwareMap);
-    }
+   }
 
     private void initMotorsAndMechParts(HardwareMap hMap)
     {
+        frontColorSens = hMap.colorSensor.get("frontColorSens");
+        int tempColor = getFrontColorSens.getVersion();
+        linearOpMode.telemetry.addData("version", tempColor);
+        linearOpMode.telemetry.update();
+        linearOpMode.sleep(3000);
     }
 
         public MecBot(HardwareMap hMap, LinearOpMode linearOpModeIN)
         {
             linearOpMode = linearOpModeIN;
             initMotors(hMap);
+            initMotorsAndMechParts(hMap);
         }
 
         public void initMotors(HardwareMap hMap)
@@ -89,6 +106,38 @@ public class MecBot
             linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
             linearOpMode.telemetry.addData("leftBack encoders: ", getLeftFrontEncoderPos());
             linearOpMode.telemetry.update();
+        }
+
+        public float getHueValue(ColorSensor frontColorSens)
+        {
+            float hsvValues[] = {0F, 0F, 0F};
+            Color.RGBToHSV(frontColorSens.red(), frontColorSens.green(), frontColorSens.blue(), hsvValues);
+
+            //Above function is used to conert from RGB to HSV
+            return hsvValues[0];
+        }
+        /*public float getSatValue(ColorSensor frontColorSens)
+        {
+            float hsvValues[] = {0F, 0F, 0F};
+            Color.RGBToHSV(frontColorSens.red(), frontColorSens.green(), frontColorSens.blue(), hsvValues);
+            return hsvValues[1];
+        }
+
+        public float getValueValue(ColorSensor frontColorSens)
+        {
+            float hsvValues[] = {0F, 0F, 0F};
+            Color.RGBToHSV(frontColorSens.red(), frontColorSens.green(), frontColorSens.blue(), hsvValues);
+            return hsvValues[2];
+        }*/
+        public char getColor(ColorSensor frontColorSens)
+        {
+            float hue = getHueValue(frontColorSens);
+            //float value = getValueValue(frontColorSens);
+
+            if (hue > 0 && hue < 40)
+                return 'y';
+            else
+                return 's'; //s for skystone
         }
         public void driveStraight_Enc(float encoders, double pow)
         {
@@ -159,7 +208,8 @@ public class MecBot
                     if (loops > 3 && (Math.abs(driveRightFront.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftFront.getVelocity(AngleUnit.DEGREES)) < 5))
                         break;
                 }
-            } else
+            }
+            else
             {
                 driveMotorsAuto(absPow, absPow);
 
@@ -694,4 +744,9 @@ public class MecBot
         {
             return driveRightBack;
         }
+
+    public ColorSensor getFrontColorSens()
+    {
+        return frontColorSens;
+    }
 }

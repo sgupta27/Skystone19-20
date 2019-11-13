@@ -1,11 +1,20 @@
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 import com.qualcomm.robotcore.hardware.Servo;
+import android.graphics.Color;
+
+//import com.qualcomm.robotcore.hardware.Servo;
+
+
+
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -19,20 +28,26 @@ public class MecBot
 
         private LinearOpMode linearOpMode;
         private DistanceSensor frontDistSens;
+        RevBlinkinLedDriver lights;
         Orientation angles;
         Acceleration gravity;
         int loops = 0;
         double velocitiesR = 0;
         double velocitiesL = 0;
 
+        private ColorSensor frontColorSens;
+ 
         private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
         private float roboDiameterCm = (float) (45.7 * Math.PI); // can be adjusted
         private float wheelCircIn = 4 * (float) Math.PI; //Circumference of wheels used
         private float wheelCircCm = (float) (9.8 * Math.PI);
         private ElapsedTime runtime = new ElapsedTime();
-        enum Result{
-            Left, Right, Moved;
-        }
+        public ColorSensor getFrontColorSens;
+
+    enum Result
+    {
+        Left, Right, Moved;
+    }
 
     public MecBot(HardwareMap hardwareMap)
     {
@@ -41,17 +56,22 @@ public class MecBot
 //        driveLeftBack = hardwareMap.get(DcMotorImplEx.class, "driveLeftBack");
 //        driveRightBack = hardwareMap.get(DcMotorImplEx.class, "driveRightBack");
         initMotors(hardwareMap);
-        initMotorsAndMechParts(hardwareMap);
-    }
+   }
 
     private void initMotorsAndMechParts(HardwareMap hMap)
     {
+        frontColorSens = hMap.colorSensor.get("frontColorSens");
+        int tempColor = getFrontColorSens.getVersion();
+        linearOpMode.telemetry.addData("version", tempColor);
+        linearOpMode.telemetry.update();
+        linearOpMode.sleep(3000);
     }
 
         public MecBot(HardwareMap hMap, LinearOpMode linearOpModeIN)
         {
             linearOpMode = linearOpModeIN;
             initMotors(hMap);
+            initMotorsAndMechParts(hMap);
         }
 
         public void initMotors(HardwareMap hMap)
@@ -61,6 +81,7 @@ public class MecBot
             driveLeftBack = hMap.get(DcMotorImplEx.class, "driveLeftBack");
             driveRightFront = hMap.get(DcMotorImplEx.class, "driveRightFront");
             frontDistSens = hMap.get(DistanceSensor.class, "frontDistSens");
+            lights = hMap.get(lights.getClass(), "blinkin");
 
 
 
@@ -85,6 +106,38 @@ public class MecBot
             linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
             linearOpMode.telemetry.addData("leftBack encoders: ", getLeftFrontEncoderPos());
             linearOpMode.telemetry.update();
+        }
+
+        public float getHueValue(ColorSensor frontColorSens)
+        {
+            float hsvValues[] = {0F, 0F, 0F};
+            Color.RGBToHSV(frontColorSens.red(), frontColorSens.green(), frontColorSens.blue(), hsvValues);
+
+            //Above function is used to conert from RGB to HSV
+            return hsvValues[0];
+        }
+        /*public float getSatValue(ColorSensor frontColorSens)
+        {
+            float hsvValues[] = {0F, 0F, 0F};
+            Color.RGBToHSV(frontColorSens.red(), frontColorSens.green(), frontColorSens.blue(), hsvValues);
+            return hsvValues[1];
+        }
+
+        public float getValueValue(ColorSensor frontColorSens)
+        {
+            float hsvValues[] = {0F, 0F, 0F};
+            Color.RGBToHSV(frontColorSens.red(), frontColorSens.green(), frontColorSens.blue(), hsvValues);
+            return hsvValues[2];
+        }*/
+        public char getColor(ColorSensor frontColorSens)
+        {
+            float hue = getHueValue(frontColorSens);
+            //float value = getValueValue(frontColorSens);
+
+            if (hue > 0 && hue < 40)
+                return 'y';
+            else
+                return 's'; //s for skystone
         }
         public void driveStraight_Enc(float encoders, double pow)
         {
@@ -155,7 +208,8 @@ public class MecBot
                     if (loops > 3 && (Math.abs(driveRightFront.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftFront.getVelocity(AngleUnit.DEGREES)) < 5))
                         break;
                 }
-            } else
+            }
+            else
             {
                 driveMotorsAuto(absPow, absPow);
 
@@ -321,8 +375,6 @@ public class MecBot
         }*/
         public void pivot_enc(double encoder)//Utilizes two motors at a time; spins in place
         {
-
-
             //It pivots in the direction of how to unit circle spins
             resetDriveEncoders();
 
@@ -353,70 +405,7 @@ public class MecBot
             stopAllMotors();
             stopDriveMotors();
         }
-        public void pivot_deg(float degrees)
-        {
-            pivot(degrees, .8);
-        }
-        public void pivot_degpow(double degrees, double pow)//Utilizes two motors at a time; spins in place
-        {
 
-            double encTarget;
-            encTarget = Math.abs(17.254 * Math.abs(degrees) + 367.295);
-
-            //It pivots in the direction of how to unit circle spins
-            if (degrees < 0) //Pivot Clockwise
-            {
-                holonomic(-Math.abs(pow), 0,0,1);
-//                driveRightFront.setPower(-Math.abs(pow));
-//                driveRightBack.setPower(-Math.abs(pow));
-//                driveLeftFront.setPower(-Math.abs(pow));
-//                driveLeftBack.setPower(-Math.abs(pow));
-            } else //CounterClockwise
-            {
-                holonomic(Math.abs(pow),0,0,1);
-//                driveRightFront.setPower(Math.abs(pow));
-//                driveRightBack.setPower(Math.abs(pow));
-//                driveLeftFront.setPower(Math.abs(pow));
-//                driveLeftBack.setPower(Math.abs(pow));
-            }
-
-            while (Math.abs(driveLeftFront.getCurrentPosition()) < encTarget && Math.abs(driveRightFront.getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested())
-            {
-            }
-            stopAllMotors();
-            stopDriveMotors();
-        }
-
-        public void pivot(float degrees, double pow)//Utilizes two motors at a time; spins in place
-        {
-
-            double encTarget;
-            encTarget = Math.abs(17.254 * Math.abs(degrees) + 367.295);
-
-            //It pivots in the direction of how to unit circle spins
-            if (degrees < 0) //Pivot Clockwise
-            {
-                holonomic(-Math.abs(pow),0,0,1);
-//                driveRightFront.setPower(-Math.abs(pow));
-//                driveRightBack.setPower(-Math.abs(pow));
-//                driveLeftFront.setPower(-Math.abs(pow));
-//                driveLeftBack.setPower(-Math.abs(pow));
-            }
-            else //CounterClockwise
-            {
-                holonomic(Math.abs(pow),0,0,1);
-//                driveRightFront.setPower(Math.abs(pow));
-//                driveRightBack.setPower(Math.abs(pow));
-//                driveLeftFront.setPower(Math.abs(pow));
-//                driveLeftBack.setPower(Math.abs(pow));
-            }
-
-            while (Math.abs(driveLeftFront.getCurrentPosition()) < encTarget && Math.abs(driveRightFront.getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested())
-            {
-            }
-            stopAllMotors();
-            stopDriveMotors();
-        }
     public void strafe_enc(double encoder)//Utilizes two motors at a time; spins in place
     {
     //It pivots in the direction of how to unit circle spins
@@ -473,34 +462,36 @@ public class MecBot
             driveRightBack.setPower(Turn - Strafe + Forward);
         }
     }
-    public MecBot.Result wait_for_robot(double maxLookDistance_in, long timeToCheck_ms, int maxWait_ms, boolean shiftLeft)
+    public MecBot.Result wait_for_robot(double maxLookDistance_in, long timeToCheck_ms, double maxWait_s, boolean shiftLeft)
     {
         double sensorDist = getFrontDistance_IN();
-        runtime.reset();
-        while (sensorDist <= maxLookDistance_in && runtime.time() < maxWait_ms)
+        resetRunTime();
+        //timeToCheck_ms = 100;
+        while (sensorDist <= maxLookDistance_in && getRunTime() < maxWait_s)
         {
             linearOpMode.sleep(timeToCheck_ms);
             sensorDist = getFrontDistance_IN();
             linearOpMode.telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
-            //linearOpMode.telemetry.addData("sensorDistance: ", sensorDist);
-            linearOpMode.telemetry.addData("maxWait_ms: ", maxWait_ms);
-            //linearOpMode.telemetry.addData("Time ran for: ", runtime.time());
+            linearOpMode.telemetry.addData("sensorDistance: ", sensorDist);
+            linearOpMode.telemetry.addData("maxWait_ms: ", maxWait_s);
+            linearOpMode.telemetry.addData("Time ran for: ", getRunTime());
             linearOpMode.telemetry.addData("timeToCheck_ms: ", timeToCheck_ms);
             linearOpMode.telemetry.addData("Shifting Left: ", shiftLeft);
             linearOpMode.telemetry.addData("Outside: ", false);
+            linearOpMode.telemetry.addData("Output: ", "Currently Running");
             linearOpMode.telemetry.update();
-            //Flash the lights however we wish to
+            //setLights(RevBlinkinLedDriver.BlinkinPattern.STROBE_GOLD);//flash lights
         }
-        //set the lights back to normal
-        if (runtime.time() >= maxWait_ms)
+        //setLights(RevBlinkinLedDriver.BlinkinPattern.BLACK);//turn off here
+        if (getRunTime() >= maxWait_s)
         {
             if (shiftLeft)//Left for now
             {
-                strafe_enc(-2f);//Don't know how far we wish to move yet...
+                strafe_enc(30f);//Don't know how far we wish to move yet...
                 return Result.Left;//Return the fact that we shifted left
             } else //Right for now
             {
-                strafe_enc(2f);//Don't know how far we wish to move yet...
+                strafe_enc(-30f);//Don't know how far we wish to move yet...
                 return Result.Right;//Return the fact that we shifted right
             }
         } else
@@ -564,7 +555,7 @@ public class MecBot
     {
         resetDriveEncoders();
 
-        if (angle_deg < 0) //Pivot Counterclockwise
+        if (angle_deg < 0) //Pivot clockwise
         {
             holonomic(-pow, 0,0,1);
 //                driveRightFront.setPower(.8);
@@ -573,7 +564,7 @@ public class MecBot
 //                driveLeftBack.setPower(-.8);
 
         }
-        else //Clockwise
+        else //Counterclockwise
         {
             holonomic(pow,0,0,1);
 //                driveRightFront.setPower(-.8);
@@ -693,6 +684,22 @@ public class MecBot
     {
         return frontDistSens.getDistance(DistanceUnit.INCH);
     }
+    //public void setLights(RevBlinkinLedDriver.BlinkinPattern pattern)
+    //{
+    //    lights.setPattern(pattern);
+    //}
+    //public class getLightsClass()
+    //{
+    //    return lights.getClass();
+    //}
+    public double getRunTime()
+    {
+        return runtime.time();
+    }
+    public void resetRunTime()
+    {
+        runtime.reset();
+    }
     public double anglePerpToGrav()
         {
             return Math.atan(gravity.yAccel / gravity.zAccel);
@@ -737,4 +744,9 @@ public class MecBot
         {
             return driveRightBack;
         }
+
+    public ColorSensor getFrontColorSens()
+    {
+        return frontColorSens;
+    }
 }

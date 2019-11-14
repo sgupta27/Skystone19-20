@@ -63,8 +63,10 @@ public class MecBot
         frontColorSens = hMap.colorSensor.get("frontColorSens");
         int tempColor = getFrontColorSens.getVersion();
         linearOpMode.telemetry.addData("version", tempColor);
+        linearOpMode.telemetry.addData("Class: ", RevBlinkinLedDriver.class);
         linearOpMode.telemetry.update();
         linearOpMode.sleep(3000);
+        lights = hMap.get(RevBlinkinLedDriver.class, "blinkin");
     }
 
         public MecBot(HardwareMap hMap, LinearOpMode linearOpModeIN)
@@ -81,7 +83,6 @@ public class MecBot
             driveLeftBack = hMap.get(DcMotorImplEx.class, "driveLeftBack");
             driveRightFront = hMap.get(DcMotorImplEx.class, "driveRightFront");
             frontDistSens = hMap.get(DistanceSensor.class, "frontDistSens");
-            lights = hMap.get(lights.getClass(), "blinkin");
 
 
 

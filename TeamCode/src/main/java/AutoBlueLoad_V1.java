@@ -19,6 +19,7 @@ public class AutoBlueLoad_V1 extends LinearOpMode
         telemetry.addData("stone color = ", colorSkystone);
         telemetry.update();
         
+
         //check for color of cubes and get correct cube
         /*holo.driveStraight_Inches(-5, .8);
         holo.driveStrafe_Inches(-52, .8);

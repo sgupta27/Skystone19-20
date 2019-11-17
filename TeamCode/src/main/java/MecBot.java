@@ -467,18 +467,18 @@ public class MecBot
             systemAccess.telemetry.addData("Outside: ", false);
             systemAccess.telemetry.addData("Output: ", "Currently Running");
             systemAccess.telemetry.update();
-            //setLights(RevBlinkinLedDriver.BlinkinPattern.STROBE_GOLD);//flash lights
+            setLightsColor(RevBlinkinLedDriver.BlinkinPattern.STROBE_GOLD);
         }
-        //setLights(RevBlinkinLedDriver.BlinkinPattern.BLACK);//turn off here
+        setLightsColor(RevBlinkinLedDriver.BlinkinPattern.BLACK);
         if (getRunTime() >= maxWait_s)
         {
             if (shiftLeft)//Left for now
             {
-                strafe_enc(30f);//Don't know how far we wish to move yet...
+                driveStrafe_Inches(-20, 1);
                 return Result.Left;//Return the fact that we shifted left
             } else //Right for now
             {
-                strafe_enc(-30f);//Don't know how far we wish to move yet...
+                driveStrafe_Inches(20, 1);
                 return Result.Right;//Return the fact that we shifted right
             }
         } else
@@ -666,6 +666,8 @@ public class MecBot
     {
         return frontDistSens;
     }
+
+    public void setLightsColor(RevBlinkinLedDriver.BlinkinPattern pattern) { lights.setPattern(pattern);}
 
     public double getFrontDistance_IN()
     {

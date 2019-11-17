@@ -31,7 +31,7 @@ public class ColorSensor_Test extends OpMode
     {
         gamepad2.setJoystickDeadzone(.3f);//attachments
         gamepad1.setJoystickDeadzone(.3f);//driver
-        holo = new MecBot(hardwareMap);
+        holo = new MecBot(hardwareMap, this);
 //        robot.init(hardwareMap);
 
         // get a reference to the RelativeLayout so we can change the background

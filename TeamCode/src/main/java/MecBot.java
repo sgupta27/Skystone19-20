@@ -121,7 +121,7 @@ public class MecBot
             float hue = getHueValue();
             //float value = getValueValue(frontColorSens);
 
-            if (hue > 0 && hue < 40)
+            if (hue > 0 && hue < 50)
                 return 'y';
             else
                 return 's'; //s for skystone

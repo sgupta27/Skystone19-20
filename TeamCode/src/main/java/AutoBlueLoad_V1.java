@@ -16,14 +16,22 @@ public class AutoBlueLoad_V1 extends LinearOpMode
         //up with the outside edge closer to the build zone of the second square from the audience side
         holo.driveStraight_Inches(25, .8);
         char colorSkystone = holo.getColor();
+        float totalStrafeDist_In = -52;
         telemetry.addData("stone color = ", colorSkystone);
         telemetry.update();
-        
-
-        //check for color of cubes and get correct cube
-        /*holo.driveStraight_Inches(-5, .8);
-        holo.driveStrafe_Inches(-52, .8);
-        //drop off cube
-        holo.driveStrafe_Inches(16, .8);*/
+        while (colorSkystone == 'y')
+        {
+            holo.driveStrafe_Inches(-8, .8);
+            totalStrafeDist_In = totalStrafeDist_In + 8;
+            colorSkystone = holo.getColor();
+            telemetry.addData("stone color 2 = ", colorSkystone);
+            telemetry.update();
+        }
+        //grab skystone
+        holo.driveStraight_Inches(-5,.8);
+        holo.driveStrafe_Inches(totalStrafeDist_In, .8);
+        //drop skystone
+        holo.driveStrafe_Inches(13, .8);
+        holo.stopAllMotors();
     }
 }

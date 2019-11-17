@@ -2,7 +2,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import android.graphics.Color;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @TeleOp(name = "ColorSensor_Test")
 public class ColorSensor_Test extends OpMode
@@ -69,13 +73,13 @@ public class ColorSensor_Test extends OpMode
         // send the info back to driver station using telemetry function.
 
         telemetry.addData("right" , null);
-        telemetry.addData("RWC = ", holo.getColor(frontColorSens));
+        telemetry.addData("RWC = ", holo.getColor());
         telemetry.addData("Hue ", hsvValues_Ada[0]);
         telemetry.addData("Saturation ", hsvValues_Ada[1]);
         telemetry.addData("Value ", hsvValues_Ada[2]);
 
         telemetry.addData("left" , null);
-        telemetry.addData("LWC = ", holo.getColor(frontColorSens));
+        telemetry.addData("LWC = ", holo.getColor());
         telemetry.addData("Hue " ,hsvValues[0]);
         telemetry.addData("Saturation ", hsvValues[1]);
         telemetry.addData("Value ", hsvValues[2]);

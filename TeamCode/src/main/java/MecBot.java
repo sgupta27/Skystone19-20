@@ -1,5 +1,6 @@
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -8,12 +9,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import com.qualcomm.robotcore.hardware.Servo;
 import android.graphics.Color;
-
-//import com.qualcomm.robotcore.hardware.Servo;
-
-
 
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -26,7 +22,7 @@ public class MecBot
 {
     private DcMotorImplEx driveLeftFront, driveRightFront, driveLeftBack, driveRightBack;
 
-        private LinearOpMode linearOpMode;
+        private OpMode systemAccess; //need access to telemetry (OpMode) and sometimes sleep (LinearOpMode)
         private DistanceSensor frontDistSens;
         RevBlinkinLedDriver lights;
         Orientation angles;
@@ -49,31 +45,21 @@ public class MecBot
         Left, Right, Moved;
     }
 
-    public MecBot(HardwareMap hardwareMap)
+    public MecBot(HardwareMap hMap, OpMode systemAccessIN)
     {
-//        driveLeftFront = hardwareMap.get(DcMotorImplEx.class, "driveLeftFront");
-//        driveRightFront = hardwareMap.get(DcMotorImplEx.class, "driveRightFront");
-//        driveLeftBack = hardwareMap.get(DcMotorImplEx.class, "driveLeftBack");
-//        driveRightBack = hardwareMap.get(DcMotorImplEx.class, "driveRightBack");
-        initMotors(hardwareMap);
-   }
-
-    private void initMotorsAndMechParts(HardwareMap hMap)
-    {
-        frontColorSens = hMap.colorSensor.get("frontColorSens");
-        int tempColor = getFrontColorSens.getVersion();
-        linearOpMode.telemetry.addData("version", tempColor);
-        linearOpMode.telemetry.addData("Class: ", RevBlinkinLedDriver.class);
-        linearOpMode.telemetry.update();
-        linearOpMode.sleep(3000);
-        lights = hMap.get(RevBlinkinLedDriver.class, "blinkin");
+        systemAccess = systemAccessIN;
+        initMotors(hMap);
+        initSensors(hMap);
     }
 
-        public MecBot(HardwareMap hMap, LinearOpMode linearOpModeIN)
+        private void initSensors(HardwareMap hMap)
         {
-            linearOpMode = linearOpModeIN;
-            initMotors(hMap);
-            initMotorsAndMechParts(hMap);
+            frontColorSens = hMap.get(ColorSensor.class, "frontColorSens");
+            int tempColor = getFrontColorSens().getVersion();
+            systemAccess.telemetry.addData("version", tempColor);
+            systemAccess.telemetry.addData("Class: ", RevBlinkinLedDriver.class);
+            systemAccess.telemetry.update();
+            lights = hMap.get(RevBlinkinLedDriver.class, "blinkin");
         }
 
         public void initMotors(HardwareMap hMap)
@@ -102,14 +88,14 @@ public class MecBot
 
         public void checkEncTest()
         {
-            linearOpMode.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
-            linearOpMode.telemetry.addData("leftFront encoders: ", getLeftBackEncoderPos());
-            linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
-            linearOpMode.telemetry.addData("leftBack encoders: ", getLeftFrontEncoderPos());
-            linearOpMode.telemetry.update();
+            systemAccess.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+            systemAccess.telemetry.addData("leftFront encoders: ", getLeftBackEncoderPos());
+            systemAccess.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
+            systemAccess.telemetry.addData("leftBack encoders: ", getLeftFrontEncoderPos());
+            systemAccess.telemetry.update();
         }
 
-        public float getHueValue(ColorSensor frontColorSens)
+        public float getHueValue()
         {
             float hsvValues[] = {0F, 0F, 0F};
             Color.RGBToHSV(frontColorSens.red(), frontColorSens.green(), frontColorSens.blue(), hsvValues);
@@ -130,9 +116,9 @@ public class MecBot
             Color.RGBToHSV(frontColorSens.red(), frontColorSens.green(), frontColorSens.blue(), hsvValues);
             return hsvValues[2];
         }*/
-        public char getColor(ColorSensor frontColorSens)
+        public char getColor()
         {
-            float hue = getHueValue(frontColorSens);
+            float hue = getHueValue();
             //float value = getValueValue(frontColorSens);
 
             if (hue > 0 && hue < 40)
@@ -149,11 +135,11 @@ public class MecBot
 //            driveRightBack.setPower(pow);
 //            driveLeftFront.setPower(pow);
 
-            linearOpMode.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
-            linearOpMode.telemetry.addData("leftFront encoders: ", getLeftBackEncoderPos());
-            linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
-            linearOpMode.telemetry.addData("leftBack encoders: ", getLeftFrontEncoderPos());
-            linearOpMode.telemetry.update();
+            systemAccess.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+            systemAccess.telemetry.addData("leftFront encoders: ", getLeftBackEncoderPos());
+            systemAccess.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
+            systemAccess.telemetry.addData("leftBack encoders: ", getLeftFrontEncoderPos());
+            systemAccess.telemetry.update();
 
             encoders=Math.abs(encoders);
 
@@ -162,11 +148,11 @@ public class MecBot
 
             }
             stopAllMotors();
-            linearOpMode.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
-            linearOpMode.telemetry.addData("leftBack encoders: ", getLeftBackEncoderPos());
-            linearOpMode.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
-            linearOpMode.telemetry.addData("leftFront encoders: ", getLeftFrontEncoderPos());
-            linearOpMode.telemetry.update();
+            systemAccess.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+            systemAccess.telemetry.addData("leftBack encoders: ", getLeftBackEncoderPos());
+            systemAccess.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
+            systemAccess.telemetry.addData("leftFront encoders: ", getLeftFrontEncoderPos());
+            systemAccess.telemetry.update();
         }
 
         public void driveMotorsAuto(float lPow, float rPow)
@@ -463,7 +449,7 @@ public class MecBot
             driveRightBack.setPower(Turn - Strafe + Forward);
         }
     }
-    public MecBot.Result wait_for_robot(double maxLookDistance_in, long timeToCheck_ms, double maxWait_s, boolean shiftLeft)
+    public MecBot.Result wait_for_robot(double maxLookDistance_in, long timeToCheck_ms, double maxWait_s, boolean shiftLeft, LinearOpMode linearOpMode)
     {
         double sensorDist = getFrontDistance_IN();
         resetRunTime();
@@ -472,15 +458,15 @@ public class MecBot
         {
             linearOpMode.sleep(timeToCheck_ms);
             sensorDist = getFrontDistance_IN();
-            linearOpMode.telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
-            linearOpMode.telemetry.addData("sensorDistance: ", sensorDist);
-            linearOpMode.telemetry.addData("maxWait_ms: ", maxWait_s);
-            linearOpMode.telemetry.addData("Time ran for: ", getRunTime());
-            linearOpMode.telemetry.addData("timeToCheck_ms: ", timeToCheck_ms);
-            linearOpMode.telemetry.addData("Shifting Left: ", shiftLeft);
-            linearOpMode.telemetry.addData("Outside: ", false);
-            linearOpMode.telemetry.addData("Output: ", "Currently Running");
-            linearOpMode.telemetry.update();
+            systemAccess.telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
+            systemAccess.telemetry.addData("sensorDistance: ", sensorDist);
+            systemAccess.telemetry.addData("maxWait_ms: ", maxWait_s);
+            systemAccess.telemetry.addData("Time ran for: ", getRunTime());
+            systemAccess.telemetry.addData("timeToCheck_ms: ", timeToCheck_ms);
+            systemAccess.telemetry.addData("Shifting Left: ", shiftLeft);
+            systemAccess.telemetry.addData("Outside: ", false);
+            systemAccess.telemetry.addData("Output: ", "Currently Running");
+            systemAccess.telemetry.update();
             //setLights(RevBlinkinLedDriver.BlinkinPattern.STROBE_GOLD);//flash lights
         }
         //setLights(RevBlinkinLedDriver.BlinkinPattern.BLACK);//turn off here
@@ -598,22 +584,22 @@ public class MecBot
 
         initIMU();
 
-        linearOpMode.sleep(100);
+        systemAccess.sleep(100);
         if (degreesToStopAt < 0)
         {
             driveRightOne.setPower(-Math.abs(pow));
             driveLeftOne.setPower(-Math.abs(pow));
-            while (getYaw() > degreesToStopAt && !linearOpMode.isStopRequested())
+            while (getYaw() > degreesToStopAt && !systemAccess.isStopRequested())
             {
-                linearOpMode.sleep(160);
+                systemAccess.sleep(160);
             }
         } else
         {
             driveRightOne.setPower(Math.abs(pow));
             driveLeftOne.setPower(Math.abs(pow));
-            while (getYaw() < degreesToStopAt && !linearOpMode.isStopRequested())
+            while (getYaw() < degreesToStopAt && !systemAccess.isStopRequested())
             {
-                linearOpMode.sleep(160);
+                systemAccess.sleep(160);
             }
         }
 

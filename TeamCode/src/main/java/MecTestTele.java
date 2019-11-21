@@ -13,7 +13,7 @@ public class MecTestTele extends OpMode
 
     public void init()
     {
-        holo = new MecBot(hardwareMap);
+        holo = new MecBot(hardwareMap, this);
         gamepad1.setJoystickDeadzone(.25f);
         gamepad2.setJoystickDeadzone(.25f);
     }

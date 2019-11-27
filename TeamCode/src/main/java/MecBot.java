@@ -23,7 +23,7 @@ public class MecBot
     private DcMotorImplEx driveLeftFront, driveRightFront, driveLeftBack, driveRightBack;
 
         private OpMode systemAccess; //need access to telemetry (OpMode) and sometimes sleep (LinearOpMode)
-        private DistanceSensor frontDistSens;
+        private DistanceSensor frontDistSens, rightDistSens, leftDistSens;
         RevBlinkinLedDriver lights;
         Orientation angles;
         Acceleration gravity;
@@ -69,8 +69,8 @@ public class MecBot
             driveLeftBack = hMap.get(DcMotorImplEx.class, "driveLeftBack");
             driveRightFront = hMap.get(DcMotorImplEx.class, "driveRightFront");
             frontDistSens = hMap.get(DistanceSensor.class, "frontDistSens");
-
-
+            rightDistSens = hMap.get(DistanceSensor.class, "rightDistSens");
+            leftDistSens = hMap.get(DistanceSensor.class, "leftDistSens");
 
             driveRightFront.setDirection(DcMotorSimple.Direction.REVERSE);
             driveRightBack.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -610,9 +610,18 @@ public class MecBot
         {
             return driveRightFront.getCurrentPosition();
         }
-        public int getRightBackEncoderPos() { return driveRightBack.getCurrentPosition(); }
-        public int getLeftFrontEncoderPos() { return driveLeftFront.getCurrentPosition(); }
-        public int getLeftBackEncoderPos() { return driveLeftBack.getCurrentPosition(); }
+        public int getRightBackEncoderPos()
+        {
+            return driveRightBack.getCurrentPosition();
+        }
+        public int getLeftFrontEncoderPos()
+        {
+            return driveLeftFront.getCurrentPosition();
+        }
+        public int getLeftBackEncoderPos()
+        {
+            return driveLeftBack.getCurrentPosition();
+        }
 
         public void driveMotors(float lPow, float rPow)
         {
@@ -661,18 +670,37 @@ public class MecBot
         //gravity  = imu.getGravity();
     }*/
 
-
     public DistanceSensor getFrontDistSens()
     {
         return frontDistSens;
     }
 
-    public void setLightsColor(RevBlinkinLedDriver.BlinkinPattern pattern) { lights.setPattern(pattern);}
+    public DistanceSensor getFrontRightDistSens()
+    {
+        return rightDistSens;
+    }
+
+    public double getRightDistance_IN()
+    {
+        return rightDistSens.getDistance(DistanceUnit.INCH);
+    }
+
+    public DistanceSensor getLeftDistSens()
+    {
+        return leftDistSens;
+    }
+
+    public double getLeftDistance_IN()
+    {
+        return leftDistSens.getDistance(DistanceUnit.INCH);
+    }
 
     public double getFrontDistance_IN()
     {
         return frontDistSens.getDistance(DistanceUnit.INCH);
     }
+    public void setLightsColor(RevBlinkinLedDriver.BlinkinPattern pattern) { lights.setPattern(pattern);}
+
     //public void setLights(RevBlinkinLedDriver.BlinkinPattern pattern)
     //{
     //    lights.setPattern(pattern);
@@ -738,4 +766,25 @@ public class MecBot
     {
         return frontColorSens;
     }
+
+    public void kissWall(float requiredDist, float intervalDist, LinearOpMode linearOpMode);
+    {
+        double straightDist, rightDist, leftDist;
+        double straightDistanceTraveled = 0;
+        float stepDistance = 10;
+        float stepPivotAmtDeg = 15;
+
+        DistanceSensor usingDistSensor = frontDistSens;
+
+        while (usingDistSensor.getDistance(DistanceUnit.INCH) > requiredDist && !linearOpMode.isStopRequested())
+        {
+            linearOpMode.sleep(500);
+        }
+    }
+}
+
+
+
+
+
 }

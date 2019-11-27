@@ -60,6 +60,9 @@ public class MecBot
             systemAccess.telemetry.addData("Class: ", RevBlinkinLedDriver.class);
             systemAccess.telemetry.update();
             lights = hMap.get(RevBlinkinLedDriver.class, "blinkin");
+            frontDistSens = hMap.get(DistanceSensor.class, "frontDistSens");
+            //rightDistSens = hMap.get(DistanceSensor.class, "rightDistSens");
+            //leftDistSens = hMap.get(DistanceSensor.class, "leftDistSens");
         }
 
         public void initMotors(HardwareMap hMap)
@@ -68,9 +71,7 @@ public class MecBot
             driveRightBack = hMap.get(DcMotorImplEx.class, "driveRightBack");
             driveLeftBack = hMap.get(DcMotorImplEx.class, "driveLeftBack");
             driveRightFront = hMap.get(DcMotorImplEx.class, "driveRightFront");
-            frontDistSens = hMap.get(DistanceSensor.class, "frontDistSens");
-            rightDistSens = hMap.get(DistanceSensor.class, "rightDistSens");
-            leftDistSens = hMap.get(DistanceSensor.class, "leftDistSens");
+
 
             driveRightFront.setDirection(DcMotorSimple.Direction.REVERSE);
             driveRightBack.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -454,7 +455,7 @@ public class MecBot
         double sensorDist = getFrontDistance_IN();
         resetRunTime();
         //timeToCheck_ms = 100;
-        while (sensorDist <= maxLookDistance_in && getRunTime() < maxWait_s)
+        while (sensorDist <= maxLookDistance_in && getRunTime() < maxWait_s && !linearOpMode.isStopRequested())
         {
             linearOpMode.sleep(timeToCheck_ms);
             sensorDist = getFrontDistance_IN();
@@ -767,7 +768,7 @@ public class MecBot
         return frontColorSens;
     }
 
-    public void kissWall(float requiredDist, float intervalDist, LinearOpMode linearOpMode);
+    public void kissWall(float requiredDist_in, float intervalDist, LinearOpMode linearOpMode)
     {
         double straightDist, rightDist, leftDist;
         double straightDistanceTraveled = 0;
@@ -775,11 +776,16 @@ public class MecBot
         float stepPivotAmtDeg = 15;
 
         DistanceSensor usingDistSensor = frontDistSens;
-
-        while (usingDistSensor.getDistance(DistanceUnit.INCH) > requiredDist && !linearOpMode.isStopRequested())
+        holonomic(0,0,.15, 1);
+        while (usingDistSensor.getDistance(DistanceUnit.INCH) > requiredDist_in && !linearOpMode.isStopRequested())
         {
-            linearOpMode.sleep(500);
+            linearOpMode.sleep(50);
+            linearOpMode.telemetry.addData("distanceFromWall: ", usingDistSensor.getDistance(DistanceUnit.INCH));
+            linearOpMode.telemetry.addData("Required Distance: ", requiredDist_in);
+            systemAccess.telemetry.addData("Hi: ", "hello");
+            systemAccess.telemetry.update();
         }
+        stopDriveMotors();
     }
 }
 
@@ -787,4 +793,4 @@ public class MecBot
 
 
 
-}
+

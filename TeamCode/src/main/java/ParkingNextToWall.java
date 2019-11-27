@@ -1,5 +1,22 @@
-public class ParkingNextToWall
-{
-    // we need to make the robot go 25 inches closer to the wall
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+@Autonomous(name = "ParkNextToWall")
+public class ParkingNextToWall extends LinearOpMode
+{
+    private MecBot holo;
+    MecBot.Result result = MecBot.Result.Right;
+
+    public void runOpMode()
+    {
+        holo = new MecBot(hardwareMap, this);
+        waitForStart();
+        float requiredDist_in = 4;
+        float intervalDistance = 7; //What is this supposed to do?
+        telemetry.addData("distanceFromWall: ", holo.getFrontDistance_IN());
+        telemetry.addData("Required Distance: ", requiredDist_in);
+        telemetry.update();
+        holo.kissWall(requiredDist_in, intervalDistance, this);
+        sleep(3000);
+    }
 }

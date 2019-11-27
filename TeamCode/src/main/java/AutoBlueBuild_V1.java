@@ -1,3 +1,4 @@
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -9,7 +10,9 @@ public class AutoBlueBuild_V1 extends LinearOpMode
     public void runOpMode()
     {
         holo = new MecBot(hardwareMap, this);
+        holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.SKY_BLUE);
         waitForStart();
+
         //on blue build side, robot facing the platforms with the black lines lined up to the ref side
         //edge of the second square from the ref side
         holo.driveStraight_Inches(30, .8);

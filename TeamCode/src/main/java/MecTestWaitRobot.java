@@ -8,7 +8,8 @@ public class MecTestWaitRobot extends LinearOpMode
     private MecBot holo;
     MecBot.Result result = MecBot.Result.Right;
 
-    public void runOpMode() {
+    public void runOpMode()
+    {
         holo = new MecBot(hardwareMap, this);
         holo.resetRunTime();
         waitForStart();

@@ -1,5 +1,6 @@
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 @TeleOp(name = "MecTeleController")
 public class MecTeleController extends OpMode
@@ -16,6 +17,8 @@ public class MecTeleController extends OpMode
         holo = new MecBot(hardwareMap, this);
         gamepad1.setJoystickDeadzone(.25f);
         gamepad2.setJoystickDeadzone(.25f);
+        holo.resetRunTime();
+        holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.BLACK);
     }
 
     /*public void test()
@@ -62,18 +65,23 @@ public class MecTeleController extends OpMode
         double Strafe = -gamepad1.left_stick_x;
         double Turn = -gamepad1.right_stick_x;
         double RightY = gamepad1.right_stick_y;
-        double MAX_SPEED = .5;
+        double MAX_SPEED = .8;
         double maxLookDistance_in = 12;
         long timeToCheck_ms = 50;
         int maxWait_ms = 5000;
         boolean shiftLeft = true;
         double distance = holo.getFrontDistance_IN();
+        double runTime = holo.getRunTime();
         telemetry.addData("Forward: ", Forward); //Removed for testing
         telemetry.addData("Strafe: ", Strafe);
         telemetry.addData("Turn: ", Turn);
         telemetry.addData("Right Y: ", RightY);
         telemetry.addData("MAX_SPEED: ", MAX_SPEED);
         telemetry.update();
+        if (runTime > 90)
+        {
+            holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);
+        }
         //telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
         //telemetry.addData("maxWait_ms: ", maxWait_ms);
         //telemetry.addData("timeToCheck_ms: ", timeToCheck_ms);

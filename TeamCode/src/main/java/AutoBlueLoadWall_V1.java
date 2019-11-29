@@ -3,8 +3,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
-@Autonomous(name = "AutoBlueLoad_V1")
-public class AutoBlueLoad_V1 extends LinearOpMode
+@Autonomous(name = "AutoBlueLoadWall_V1")
+public class AutoBlueLoadWall_V1 extends LinearOpMode
 {
     private MecBot holo;
 
@@ -38,12 +38,15 @@ public class AutoBlueLoad_V1 extends LinearOpMode
         holo.driveStraight_Inches(-5,.8);
         holo.driveStrafe_Inches(totalStrafeDist_In, .8);
         //drop skystone
-        holo.driveStrafe_Inches(-(totalStrafeDist_In + 28), .8);
+        //holo.driveStrafe_Inches(-(totalStrafeDist_In + 28), .8);
         //grab second skystone
-        holo.driveStrafe_Inches(totalStrafeDist_In + 20, .8);
+        //holo.driveStrafe_Inches(totalStrafeDist_In + 20, .8);
         //drop skystone
-        holo.driveStrafe_Inches(13,.8);
-        holo.driveStraight_Inches(4,.8);
+        holo.driveStrafe_Inches(48,.8);
+        holo.drivePivot_Degrees(175, .8);
+        sleep(100);
+        holo.kissWall(4,7,this);
+        holo.driveStrafe_Inches(36,.8);
         holo.stopAllMotors();
     }
 }

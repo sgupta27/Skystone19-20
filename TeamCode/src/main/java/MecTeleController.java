@@ -11,8 +11,8 @@ public class MecTeleController extends OpMode
 
 
 
-    public void init()
     {
+    public void init()
         holo = new MecBot(hardwareMap, this);
         gamepad1.setJoystickDeadzone(.25f);
         gamepad2.setJoystickDeadzone(.25f);

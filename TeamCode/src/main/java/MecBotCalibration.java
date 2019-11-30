@@ -12,27 +12,28 @@ public class MecBotCalibration extends LinearOpMode
     {
         mecBot = new MecBot(hardwareMap, this);
         waitForStart();
-        /*mecBot.driveStraight_Enc(500,.8f);
+        mecBot.driveStraight_Enc(50,.8f);
 
         while (!gamepad1.a && !isStopRequested())
         {
 
         }
-        mecBot.driveStraight_Enc(650,.8f);
+        mecBot.driveStraight_Enc(100,.8f);
         while (!gamepad1.b && !isStopRequested())
         {
 
         }
-        mecBot.driveStraight_Enc(850,.8f);
+        mecBot.driveStraight_Enc(250,.8f);
         while (!gamepad1.x && !isStopRequested())
         {
 
         }
-        mecBot.driveStraight_Enc(1000,.8f);
-        while (!gamepad1.y && !isStopRequested())*/
+        mecBot.driveStraight_Enc(400,.8f);
+        while (!gamepad1.y && !isStopRequested())
         {
 
         }
+        /*
         mecBot.pivot_enc(-600);//power is preset to 0.8 for pivots
         while (!gamepad1.a && !isStopRequested())
         {
@@ -49,7 +50,7 @@ public class MecBotCalibration extends LinearOpMode
 
         }
         mecBot.pivot_enc(-2000);
-        while (!gamepad1.y && !isStopRequested())
+        while (!gamepad1.y && !isStopRequested())*/
         {
 
         }

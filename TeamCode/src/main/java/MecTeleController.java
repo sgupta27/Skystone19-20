@@ -1,7 +1,7 @@
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-
+/*
 @TeleOp(name = "MecTeleController")
 public class MecTeleController extends OpMode
 {
@@ -57,7 +57,7 @@ public class MecTeleController extends OpMode
         {
             driveRightBack.setPower(Speed - Turn + Strafe);
         }
-    }*/
+    }
 
     public void loop()
     {
@@ -92,4 +92,4 @@ public class MecTeleController extends OpMode
         holo.holonomic(Turn, Strafe, Forward, MAX_SPEED);
         //holo.wait_for_robot(maxLookDistance_in, timeToCheck_ms, maxWait_ms, shiftLeft);
     }
-}
+}*/

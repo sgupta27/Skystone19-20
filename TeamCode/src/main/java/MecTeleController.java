@@ -1,7 +1,7 @@
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-/*
+
 @TeleOp(name = "MecTeleController")
 public class MecTeleController extends OpMode
 {
@@ -56,7 +56,7 @@ public class MecTeleController extends OpMode
         {
             driveRightBack.setPower(Speed - Turn + Strafe);
         }
-    }
+    }*/
 
     public void loop()
     {
@@ -109,4 +109,4 @@ public class MecTeleController extends OpMode
         compRobot.getCollectorPivoterMotor().setPower(-gamepad2.right_stick_y / 4);//arm pivot/shoulder from last year
         */
     }
-}*/
+}

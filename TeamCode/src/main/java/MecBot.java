@@ -503,7 +503,7 @@ public class MecBot
 //            driveLeftFront.setPower(.8);
 //            driveLeftBack.setPower(-.8);
 
-        float encoders_count = (float) (22.62*Math.abs(dist_in) - 13.02);
+        float encoders_count = (float) (29.61*Math.abs(dist_in) - 8.462); //22.62x -13.02
 
         while (Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
         {
@@ -531,7 +531,7 @@ public class MecBot
 //            driveLeftFront.setPower(.8);
 //            driveLeftBack.setPower(-.8);
         }
-        float encoders_count = (float) (24.83*Math.abs(dist_in) - 7.55);
+        float encoders_count = (float) (32.74*Math.abs(dist_in) - 14.72); //24.83x - 7.55
 
         while (Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
         {
@@ -561,7 +561,7 @@ public class MecBot
 //                driveLeftBack.setPower(.8);
         }
 
-        float encoders_count = (float) (6.57 * Math.abs(angle_deg) - 12.24);
+        float encoders_count = (float) (7.339 * Math.abs(angle_deg) + 8.147); //6.57x - 12.24
 
         while (Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
         {
@@ -676,7 +676,7 @@ public class MecBot
         return frontDistSens;
     }
 
-    public DistanceSensor getFrontRightDistSens()
+    public DistanceSensor getRightDistSens()
     {
         return rightDistSens;
     }
@@ -702,10 +702,6 @@ public class MecBot
     }
     public void setLightsColor(RevBlinkinLedDriver.BlinkinPattern pattern) { lights.setPattern(pattern);}
 
-    //public void setLights(RevBlinkinLedDriver.BlinkinPattern pattern)
-    //{
-    //    lights.setPattern(pattern);
-    //}
     //public class getLightsClass()
     //{
     //    return lights.getClass();

@@ -676,7 +676,7 @@ public class MecBot
         return frontDistSens;
     }
 
-    public DistanceSensor getFrontRightDistSens()
+    public DistanceSensor getRightDistSens()
     {
         return rightDistSens;
     }
@@ -702,10 +702,6 @@ public class MecBot
     }
     public void setLightsColor(RevBlinkinLedDriver.BlinkinPattern pattern) { lights.setPattern(pattern);}
 
-    //public void setLights(RevBlinkinLedDriver.BlinkinPattern pattern)
-    //{
-    //    lights.setPattern(pattern);
-    //}
     //public class getLightsClass()
     //{
     //    return lights.getClass();

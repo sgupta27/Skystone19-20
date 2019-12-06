@@ -1,7 +1,7 @@
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-/*
+
 @TeleOp(name = "MecTeleController")
 public class MecTeleController extends OpMode
 {
@@ -9,6 +9,7 @@ public class MecTeleController extends OpMode
     private float rValue, lValue;
     private boolean toggleSpeedMode = false;
     private boolean hasSpeedModeBeenActivated = false;
+    private double wristPosition = .4;
 
 
     public void init() {
@@ -55,39 +56,57 @@ public class MecTeleController extends OpMode
         {
             driveRightBack.setPower(Speed - Turn + Strafe);
         }
-    }
+    }*/
 
     public void loop()
     {
+        //Drive Controls (controller 1)
         double Forward = -gamepad1.left_stick_y; // this was -gamepad1.leftstick_y; AND also changed Speed to Forward
         double Strafe = -gamepad1.left_stick_x;
         double Turn = -gamepad1.right_stick_x;
-        double RightY = gamepad1.right_stick_y;
+        //double RightY = gamepad1.right_stick_y;
         double MAX_SPEED = .8;
-        double maxLookDistance_in = 12;
-        long timeToCheck_ms = 50;
-        int maxWait_ms = 5000;
-        boolean shiftLeft = true;
-        double distance = holo.getFrontDistance_IN();
         double runTime = holo.getRunTime();
         telemetry.addData("Forward: ", Forward); //Removed for testing
         telemetry.addData("Strafe: ", Strafe);
         telemetry.addData("Turn: ", Turn);
-        telemetry.addData("Right Y: ", RightY);
+        //telemetry.addData("Right Y: ", RightY);
         telemetry.addData("MAX_SPEED: ", MAX_SPEED);
         telemetry.update();
-        if (runTime > 90)
+        holo.holonomic(Turn, Strafe, Forward, MAX_SPEED);
+        if (runTime > 90) //Shows us when 30 seconds are left
         {
             holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);
         }
-        //telemetry.addData("maxLookDistance_in: ", maxLookDistance_in);
-        //telemetry.addData("maxWait_ms: ", maxWait_ms);
-        //telemetry.addData("timeToCheck_ms: ", timeToCheck_ms);
-        //telemetry.addData("Distance Sensor Value: ", distance);
-        //telemetry.addData("Shifting Left: ", shiftLeft);
-        //telemetry.addData("Hello?: ", "yes I am here");
-        //telemetry.update();
-        holo.holonomic(Turn, Strafe, Forward, MAX_SPEED);
-        //holo.wait_for_robot(maxLookDistance_in, timeToCheck_ms, maxWait_ms, shiftLeft);
+        //Attachment controls (controller 2)
+        //arm pivot/shoulder action, in and out action, wrist action, close/open action
+        /*if (gamepad2.right_bumper) //wrist code from last year
+        {
+            wristPosition += .0038;
+            if (wristPosition > 1)
+                wristPosition = 1;
+        }
+        else if (gamepad2.right_trigger > .2f)
+        {
+            wristPosition -= .0038;
+            if (wristPosition < .4)
+                wristPosition = .4;
+        }
+
+        if (gamepad2.left_bumper) //wrist code from last year
+        {
+            openGrabber()//Doesn't exist
+        }
+        else if (gamepad2.left_trigger > .2f)
+        {
+            closeGrabber()//Doesn't exist
+        }
+
+        compRobot.getWristCollectorServo().setPosition(wristPosition);
+
+        compRobot.getCollectorLifterMotor().setPower(-gamepad2.left_stick_y);//in and out from last year
+
+        compRobot.getCollectorPivoterMotor().setPower(-gamepad2.right_stick_y / 4);//arm pivot/shoulder from last year
+        */
     }
-}*/
+}

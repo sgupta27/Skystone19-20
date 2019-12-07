@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import android.graphics.Color;
@@ -24,6 +25,7 @@ public class MecBot
 
         private OpMode systemAccess; //need access to telemetry (OpMode) and sometimes sleep (LinearOpMode)
         private DistanceSensor frontDistSens, rightDistSens, leftDistSens;
+        private Servo rightGrabServo, leftGrabServo, wristServo, clampServo;
         RevBlinkinLedDriver lights;
         Orientation angles;
         Acceleration gravity;
@@ -72,6 +74,17 @@ public class MecBot
             driveLeftBack = hMap.get(DcMotorImplEx.class, "driveLeftBack");
             driveRightFront = hMap.get(DcMotorImplEx.class, "driveRightFront");
 
+            rightGrabServo = hMap.servo.get("rightGrabServo");
+            rightGrabServo.setDirection(Servo.Direction.FORWARD);
+
+            leftGrabServo = hMap.servo.get("leftGrabServo");
+            leftGrabServo.setDirection(Servo.Direction.FORWARD);
+
+            clampServo = hMap.servo.get("clampServo");
+            clampServo.setDirection(Servo.Direction.FORWARD);
+
+            wristServo = hMap.servo.get("wristServo");
+            wristServo.setDirection(Servo.Direction.FORWARD);
 
             driveRightFront.setDirection(DcMotorSimple.Direction.REVERSE);
             driveRightBack.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -568,6 +581,20 @@ public class MecBot
 
         }
         stopAllMotors();
+    }
+    public void grabStone(LinearOpMode linearOpMode)
+    {
+        wristServo.setPosition(0.4);
+        clampServo.setPosition(.55);
+        linearOpMode.sleep(400);
+        wristServo.setPosition(0);
+    }
+    public void dropStone(LinearOpMode linearOpMode)
+    {
+        wristServo.setPosition(.75);
+        clampServo.setPosition(1);
+        linearOpMode.sleep(500);
+        wristServo.setPosition(0);
     }
     /*public void pivot_IMU(float degrees_IN)
     {

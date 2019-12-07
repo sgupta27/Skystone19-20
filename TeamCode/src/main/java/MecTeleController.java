@@ -83,17 +83,17 @@ public class MecTeleController extends OpMode
         /*if (gamepad2.right_bumper) //wrist code from last year
         {
             wristPosition += .0038;
-            if (wristPosition > 1)
-                wristPosition = 1;
+            if (wristPosition > .75)
+                wristPosition = .75;
         }
         else if (gamepad2.right_trigger > .2f)
         {
             wristPosition -= .0038;
-            if (wristPosition < .4)
-                wristPosition = .4;
+            if (wristPosition < 0)
+                wristPosition = 0;
         }
 
-        if (gamepad2.left_bumper) //wrist code from last year
+        if (gamepad2.left_bumper)
         {
             openGrabber()//Doesn't exist
         }
@@ -102,11 +102,11 @@ public class MecTeleController extends OpMode
             closeGrabber()//Doesn't exist
         }
 
-        compRobot.getWristCollectorServo().setPosition(wristPosition);
+        holo.getWristCollectorServo().setPosition(wristPosition);
 
-        compRobot.getCollectorLifterMotor().setPower(-gamepad2.left_stick_y);//in and out from last year
+        holo.getCollectorLifterMotor().setPower(-gamepad2.left_stick_y);//in and out from last year
 
-        compRobot.getCollectorPivoterMotor().setPower(-gamepad2.right_stick_y / 4);//arm pivot/shoulder from last year
+        holo.getCollectorPivoterMotor().setPower(-gamepad2.right_stick_y / 4);//arm pivot/shoulder from last year
         */
     }
 }

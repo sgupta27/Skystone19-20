@@ -21,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class MecBot
 {
-    private DcMotorImplEx driveLeftFront, driveRightFront, driveLeftBack, driveRightBack;
+    private DcMotorImplEx driveLeftFront, driveRightFront, driveLeftBack, driveRightBack, shoulderMotor, armMotor;
 
         private OpMode systemAccess; //need access to telemetry (OpMode) and sometimes sleep (LinearOpMode)
         private DistanceSensor frontDistSens, rightDistSens, leftDistSens;
@@ -74,6 +74,9 @@ public class MecBot
             driveLeftBack = hMap.get(DcMotorImplEx.class, "driveLeftBack");
             driveRightFront = hMap.get(DcMotorImplEx.class, "driveRightFront");
 
+            shoulderMotor = hMap.get(DcMotorImplEx.class, "shoulderMotor");
+            armMotor = hMap.get(DcMotorImplEx.class, "armMotor");
+
             rightGrabServo = hMap.servo.get("rightGrabServo");
             rightGrabServo.setDirection(Servo.Direction.FORWARD);
 
@@ -82,9 +85,11 @@ public class MecBot
 
             clampServo = hMap.servo.get("clampServo");
             clampServo.setDirection(Servo.Direction.FORWARD);
+            clampServo.setPosition(0.55);
 
             wristServo = hMap.servo.get("wristServo");
             wristServo.setDirection(Servo.Direction.FORWARD);
+            wristServo.setPosition(0.0);
 
             driveRightFront.setDirection(DcMotorSimple.Direction.REVERSE);
             driveRightBack.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -95,6 +100,13 @@ public class MecBot
             driveRightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             driveLeftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             driveRightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+            shoulderMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            shoulderMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+            platformRelease();
 
             stopAllMotors();
 
@@ -559,19 +571,10 @@ public class MecBot
         if (angle_deg < 0) //Pivot clockwise
         {
             holonomic(-pow, 0,0,1);
-//                driveRightFront.setPower(.8);
-//                driveRightBack.setPower(.8);
-//                driveLeftFront.setPower(-.8);
-//                driveLeftBack.setPower(-.8);
-
         }
         else //Counterclockwise
         {
             holonomic(pow,0,0,1);
-//                driveRightFront.setPower(-.8);
-//                driveRightBack.setPower(-.8);
-//                driveLeftFront.setPower(.8);
-//                driveLeftBack.setPower(.8);
         }
 
         float encoders_count = (float) (7.339 * Math.abs(angle_deg) + 8.147); //6.57x - 12.24
@@ -595,6 +598,58 @@ public class MecBot
         clampServo.setPosition(1);
         linearOpMode.sleep(500);
         wristServo.setPosition(0);
+    }
+    public double setWristPosition (double wristPosition)
+    {
+        if (wristPosition < 0)
+            wristPosition = 0;
+        else if (wristPosition > .75)
+            wristPosition = .75;
+        wristServo.setPosition(wristPosition);
+        return wristPosition;
+    }
+    public double setShoulderPower (double shoulderPower_PCT)
+    {
+        if (shoulderPower_PCT < -1.0)
+            shoulderPower_PCT = -1.0;
+         else if (shoulderPower_PCT > 1.0)
+             shoulderPower_PCT = 1.0;
+        shoulderMotor.setPower(shoulderPower_PCT);
+        return shoulderPower_PCT;
+    }
+    public double getShoulderPosition()
+    {
+        return shoulderMotor.getCurrentPosition();
+    }
+    public void platformGrab()
+    {
+        leftGrabServo.setPosition(0.6);
+        rightGrabServo.setPosition(0.0);
+    }
+    public void platformRelease()
+    {
+        leftGrabServo.setPosition(0.1);
+        rightGrabServo.setPosition(0.6);
+    }
+    public double setArmPower(double armPower_PCT)
+    {
+        if (armPower_PCT < -1.0)
+            armPower_PCT = -1.0;
+        else if (armPower_PCT > 1.0)
+            armPower_PCT = 1.0;
+        armMotor.setPower(armPower_PCT);
+        return armPower_PCT;
+    }
+    public void clamp(boolean close)
+    {
+            if (close)
+            {
+                clampServo.setPosition(0.55);
+            }
+            else
+            {
+                clampServo.setPosition(1.0);
+            }
     }
     /*public void pivot_IMU(float degrees_IN)
     {

@@ -34,14 +34,14 @@ public class AutoBlueLoadWall_V1 extends LinearOpMode
             telemetry.update();
 
         }
-        //grab skystone
+        holo.grabStone(this);
         holo.driveStraight_Inches(-5,.8);
         holo.driveStrafe_Inches(totalStrafeDist_In, .8);
-        //drop skystone
+        holo.dropStone(this);
         //holo.driveStrafe_Inches(-(totalStrafeDist_In + 28), .8);
-        //grab second skystone
+        holo.grabStone(this);
         //holo.driveStrafe_Inches(totalStrafeDist_In + 20, .8);
-        //drop skystone
+        holo.dropStone(this);
         holo.driveStrafe_Inches(48,.8);
         holo.drivePivot_Degrees(175, .8);
         sleep(100);

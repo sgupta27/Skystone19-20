@@ -34,18 +34,26 @@ public class AutoBlueLoad_V1 extends LinearOpMode
             telemetry.update();
 
         }
-        //grab skystone
-        holo.driveStraight_Inches(-5,.8);
+
+        float requiredDist_in = 4.75f;
+        float intervalDistance = 7; //What is this supposed to do?
+        holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.RED);
+        holo.clamp(false);
+        holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+        holo.kissWall(requiredDist_in, intervalDistance, this);
+        holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
+        holo.grabStone(this);
+        /*holo.driveStraight_Inches(-5,.8);
         holo.driveStrafe_Inches(totalStrafeDist_In, .8);
-        //drop skystone
+        holo.dropStone(this);
         holo.driveStrafe_Inches(-(totalStrafeDist_In + 25.5f), .8);
         holo.driveStraight_Inches(7.75f,.8);
-        //grab second skystone
+        holo.grabStone(this);
         holo.driveStraight_Inches(-5,.8);
         holo.driveStrafe_Inches(totalStrafeDist_In + 22, .8);
-        //drop skystone
+        holo.dropStone(this);
         holo.driveStrafe_Inches(18,.8);
-        holo.driveStraight_Inches(6,.8);
+        holo.driveStraight_Inches(6,.8);*/
         holo.stopAllMotors();
     }
 }

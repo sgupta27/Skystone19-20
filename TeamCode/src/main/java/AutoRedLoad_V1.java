@@ -33,14 +33,14 @@ public class AutoRedLoad_V1 extends LinearOpMode
             telemetry.update();
 
         }
-        //grab skystone
+        holo.grabStone(this);
         holo.driveStraight_Inches(-5,.8);
         holo.driveStrafe_Inches(totalStrafeDist_In, .8);
-        //drop skystone
+        holo.dropStone(this);
         holo.driveStrafe_Inches(-(totalStrafeDist_In + 28), .8);
-        //grab second skystone
+        holo.grabStone(this);
         holo.driveStrafe_Inches(totalStrafeDist_In + 20, .8);
-        //drop skystone
+        holo.dropStone(this);
         holo.driveStrafe_Inches(-13,.8);
         holo.driveStraight_Inches(4,.8);*/
         holo.stopAllMotors();

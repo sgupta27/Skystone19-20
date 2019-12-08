@@ -1,3 +1,4 @@
+import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -588,9 +589,11 @@ public class MecBot
     public void grabStone(LinearOpMode linearOpMode)
     {
         wristServo.setPosition(0.4);
-        clampServo.setPosition(.55);
-        linearOpMode.sleep(400);
+        setLightsColor(RevBlinkinLedDriver.BlinkinPattern.RED);
+        clamp(true);
+        setLightsColor(RevBlinkinLedDriver.BlinkinPattern.BLUE);
         wristServo.setPosition(0);
+        setLightsColor(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
     }
     public void dropStone(LinearOpMode linearOpMode)
     {
@@ -855,13 +858,14 @@ public class MecBot
 
         DistanceSensor usingDistSensor = frontDistSens;
         holonomic(0,0,.15, 1);
+        setLightsColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);
         while (usingDistSensor.getDistance(DistanceUnit.INCH) > requiredDist_in && !linearOpMode.isStopRequested())
         {
             linearOpMode.sleep(50);
             linearOpMode.telemetry.addData("distanceFromWall: ", usingDistSensor.getDistance(DistanceUnit.INCH));
             linearOpMode.telemetry.addData("Required Distance: ", requiredDist_in);
-            systemAccess.telemetry.addData("Hi: ", "hello");
-            systemAccess.telemetry.update();
+            linearOpMode.telemetry.addData("Hi: ", "hello");
+            linearOpMode.telemetry.update();
         }
         stopDriveMotors();
     }

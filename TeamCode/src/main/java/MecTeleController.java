@@ -79,18 +79,18 @@ public class MecTeleController extends OpMode
         {
             holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);
         }
-        if (runTime > 75) //Shows us when 45 seconds are left
+        else if (runTime > 75) //Shows us when 45 seconds are left
         {
-            holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.STROBE_WHITE);
+            holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.WHITE);
         }
         //Attachment controls (controller 2)
         //arm pivot/shoulder action, in and out action, wrist action, close/open action
         double armPower = gamepad2.left_stick_y;
-        holo.setArmPower(-armPower);
+        holo.setArmPower(armPower);
 
         //The entire arm pivot controls or shoulder controls
         double shoulderPower = gamepad2.right_stick_y;
-        holo.setShoulderPower(shoulderPower * 0.5); //play with the denominator if needed to slow down
+        holo.setShoulderPower(shoulderPower * 0.4); //play with the denominator if needed to slow down
         if (Math.abs(shoulderPower) > 0.05)
             wristPosition = Math.abs(holo.getShoulderPosition()) * 0.000511 + 0.3986;
         telemetry.addData("shoulder position = ", holo.getShoulderPosition());
@@ -129,11 +129,11 @@ public class MecTeleController extends OpMode
 
        if (gamepad2.left_bumper)
         {
-            holo.clamp(true);
+            holo.clamp(false);
         }
         else if (gamepad2.left_trigger > .2f)
         {
-            holo.clamp(false);
+            holo.clamp(true);
         }
         telemetry.update();
     }

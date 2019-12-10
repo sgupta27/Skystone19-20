@@ -1,4 +1,3 @@
-import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -174,7 +173,7 @@ public class MecBot
             {
 
             }
-            stopAllMotors();
+            stopDriveMotors();
             systemAccess.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
             systemAccess.telemetry.addData("leftBack encoders: ", getLeftBackEncoderPos());
             systemAccess.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
@@ -251,10 +250,6 @@ public class MecBot
     public void stopDriveMotors()
         {
             holonomic(0,0,0,0);
-//            driveLeftFront.setPower(0);
-//            driveLeftBack.setPower(0);
-//            driveRightFront.setPower(0);
-//            driveRightBack.setPower(0);
         }
 
         public void spin_Right(float degrees)
@@ -286,7 +281,7 @@ public class MecBot
                 }
             }
 
-            stopAllMotors();
+            stopDriveMotors();
         }
 
     /*public void spin_Right_IMU(float degrees, double pow)
@@ -347,7 +342,7 @@ public class MecBot
                 }
             }
 
-            stopAllMotors();
+            stopDriveMotors();
         }
 
         /*public void spin_Left_IMU(float deg, double pow)
@@ -415,8 +410,6 @@ public class MecBot
             {
 
             }
-            stopAllMotors();
-            stopAllMotors();
             stopDriveMotors();
         }
 
@@ -448,8 +441,6 @@ public class MecBot
         {
 
         }
-        stopAllMotors();
-        stopAllMotors();
         stopDriveMotors();
     }
     public void holonomic(double Turn, double Strafe, double Forward, double MAX_SPEED)
@@ -535,7 +526,7 @@ public class MecBot
         {
 
         }
-        stopAllMotors();
+        stopDriveMotors();
     }
     public void driveStrafe_Inches(float dist_in, double pow, LinearOpMode linearOpMode)
     {
@@ -563,7 +554,7 @@ public class MecBot
         {
 
         }
-        stopAllMotors();
+        stopDriveMotors();
     }
     public void drivePivot_Degrees(float angle_deg, double pow, LinearOpMode linearOpMode)
     {
@@ -584,7 +575,7 @@ public class MecBot
         {
 
         }
-        stopAllMotors();
+        stopDriveMotors();
     }
     public void grabStone(LinearOpMode linearOpMode)
     {
@@ -641,8 +632,8 @@ public class MecBot
     }
     public double setArmPower(double armPower_PCT)
     {
-        if (armPower_PCT < -1.0)
-            armPower_PCT = -1.0;
+        if (armPower_PCT < -0.3)
+            armPower_PCT = -0.3;
         else if (armPower_PCT > 1.0)
             armPower_PCT = 1.0;
         armMotor.setPower(armPower_PCT);
@@ -739,7 +730,9 @@ public class MecBot
         }
         public void stopAllMotors()
         {
-            holonomic(0,0,0,0);
+            stopDriveMotors();
+            setShoulderPower(0.0);
+            setArmPower(0.0);
         }
 
     /*public void initIMU()

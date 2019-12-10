@@ -12,6 +12,7 @@ public class MecTeleController extends OpMode
     private double wristPosition = 0.0;
     private boolean grabberDeployed = false;
     private boolean grabberBTNReleased = true;
+    private double lastShoulderPosition = 0;
 
     public void init()
     {
@@ -90,10 +91,23 @@ public class MecTeleController extends OpMode
 
         //The entire arm pivot controls or shoulder controls
         double shoulderPower = gamepad2.right_stick_y;
-        holo.setShoulderPower(shoulderPower * 0.4); //play with the denominator if needed to slow down
+        double shoulderPosition = holo.getShoulderPosition();
         if (Math.abs(shoulderPower) > 0.05)
-            wristPosition = Math.abs(holo.getShoulderPosition()) * 0.000511 + 0.3986;
+        {
+            holo.setShoulderPower(shoulderPower * 0.5); //play with the denominator if needed to slow down
+            wristPosition = Math.abs(shoulderPosition) * 0.000511 + 0.3986;
+            lastShoulderPosition = shoulderPosition;
+        }
+        else if(shoulderPosition > lastShoulderPosition)
+        {
+            holo.setShoulderPower(-0.24);
+        }
+        else
+        {
+            holo.setShoulderPower(0.0);
+        }
         telemetry.addData("shoulder position = ", holo.getShoulderPosition());
+        telemetry.addData("last shoulder position = ", lastShoulderPosition);
 
         if (gamepad2.right_bumper) //wrist code from last year
         {
@@ -136,5 +150,11 @@ public class MecTeleController extends OpMode
             holo.clamp(true);
         }
         telemetry.update();
+    }
+
+    public void stop()
+    {
+        holo.setWristPosition(0);
+        holo.stopAllMotors();
     }
 }

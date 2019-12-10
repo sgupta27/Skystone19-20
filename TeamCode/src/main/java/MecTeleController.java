@@ -80,9 +80,9 @@ public class MecTeleController extends OpMode
         {
             holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);
         }
-        if (runTime > 75) //Shows us when 45 seconds are left
+        else if (runTime > 75) //Shows us when 45 seconds are left
         {
-            holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.STROBE_WHITE);
+            holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.WHITE);
         }
         //Attachment controls (controller 2)
         //arm pivot/shoulder action, in and out action, wrist action, close/open action
@@ -143,11 +143,11 @@ public class MecTeleController extends OpMode
 
        if (gamepad2.left_bumper)
         {
-            holo.clamp(true);
+            holo.clamp(false);
         }
         else if (gamepad2.left_trigger > .2f)
         {
-            holo.clamp(false);
+            holo.clamp(true);
         }
         telemetry.update();
     }

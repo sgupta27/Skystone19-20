@@ -16,8 +16,8 @@ public class AutoBlueLoad_V1 extends LinearOpMode
 
         //blue loading side, robot facing the cubes in the middle, outside of the right wheels lined
         //up with the outside edge closer to the build zone of the second square from the audience side
-        holo.driveStraight_Inches(26, .8);
-        holo.driveStrafe_Inches(18,.8);
+        holo.driveStraight_Inches(26, .9, this);
+        holo.driveStrafe_Inches(18,.9, this);
         char colorSkystone = holo.getColor();
         int testNumber = 1;
         float totalStrafeDist_In = -74;
@@ -25,27 +25,36 @@ public class AutoBlueLoad_V1 extends LinearOpMode
         telemetry.update();
         while (colorSkystone == 'y' & testNumber < 3)
         {
-            holo.driveStrafe_Inches(-8, .8);
+            holo.driveStrafe_Inches(-8, .9, this);
             totalStrafeDist_In = totalStrafeDist_In + 8;
             colorSkystone = holo.getColor();
             testNumber = testNumber + 1;
             telemetry.addData("number of readings = ", testNumber);
             telemetry.addData("stone color 2 = ", colorSkystone);
             telemetry.update();
-
         }
-        //grab skystone
-        holo.driveStraight_Inches(-5,.8);
-        holo.driveStrafe_Inches(totalStrafeDist_In, .8);
-        //drop skystone
-        holo.driveStrafe_Inches(-(totalStrafeDist_In + 25.5f), .8);
-        holo.driveStraight_Inches(7.75f,.8);
-        //grab second skystone
-        holo.driveStraight_Inches(-5,.8);
-        holo.driveStrafe_Inches(totalStrafeDist_In + 22, .8);
-        //drop skystone
-        holo.driveStrafe_Inches(18,.8);
-        holo.driveStraight_Inches(6,.8);
-        holo.stopAllMotors();
+        float requiredDist_in = 4.5f;
+        float intervalDistance = 7; //What is this supposed to do?
+        holo.clamp(false);
+        holo.kissWall(requiredDist_in, intervalDistance, this);
+        holo.grabStone(this);
+        holo.driveStraight_Inches(-5,.9, this);
+        holo.driveStrafe_Inches(totalStrafeDist_In, .9, this);
+        holo.dropStone(this);
+        holo.driveStrafe_Inches(-(totalStrafeDist_In + 25.5f), .9, this);
+        holo.clamp(false);
+        holo.kissWall(requiredDist_in, intervalDistance, this);
+        holo.grabStone(this);
+        holo.driveStraight_Inches(-5,.9, this);
+        holo.driveStrafe_Inches(totalStrafeDist_In + 22, .9, this);
+        holo.dropStone(this);
+        holo.driveStrafe_Inches(10,.9, this);
+        holo.driveStraight_Inches(6,.9, this);
+
+        while (opModeIsActive() && !isStopRequested())
+        {
+            holo.stopDriveMotors();
+            holo.stopAllMotors();
+        }
     }
 }

@@ -15,11 +15,17 @@ public class AutoRedBuild_V1 extends LinearOpMode
 
         //on red build side, robot facing the platforms with the red plate/black lines lined up to the
         // ref side edge of the second square from the ref side
-        holo.driveStraight_Inches(30, .8);
-        //drop down platform grabber
-        holo.driveStraight_Inches(-30, .8);
-        holo.driveStrafe_Inches(-10, .8);
-        holo.driveStraight_Inches(3, .8);
-        holo.driveStrafe_Inches(-35,.8);
+        holo.driveStrafe_Inches(12,.8, this);
+        holo.driveStraight_Inches(32, .8, this);
+        holo.platformGrab();
+        sleep(700);
+        holo.driveStraight_Inches(-31, .8, this);
+        holo.platformRelease();
+        holo.driveStrafe_Inches(-32, .8, this);
+        holo.driveStraight_Inches(21, .8, this);
+        holo.driveStrafe_Inches(6,.8, this);
+        holo.driveStrafe_Inches(-6,.8, this);
+        holo.driveStraight_Inches(-18,.8, this);
+        holo.driveStrafe_Inches(-21,.8, this);
     }
 }

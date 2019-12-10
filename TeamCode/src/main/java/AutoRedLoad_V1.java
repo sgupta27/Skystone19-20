@@ -16,10 +16,10 @@ public class AutoRedLoad_V1 extends LinearOpMode
         //red loading side, robot facing the cubes in the middle, outside of the left wheels lined
         //up with the outside edge closer to the build zone of the second square from the audience side
         holo.driveStraight_Inches(24.5f, .8);
-        holo.driveStrafe_Inches(-21,.8); //was 16 but added 8 for the sensor distance adjustment
+        holo.driveStrafe_Inches(-21,.8);
         /*char colorSkystone = holo.getColor();
         int testNumber = 1;
-        float totalStrafeDist_In = 76; //was 68 but added 8 for the sensor distance adjustment
+        float totalStrafeDist_In = 82; //was 68 but added 8 for the sensor distance adjustment
         telemetry.addData("stone color = ", colorSkystone);
         telemetry.update();
         while (colorSkystone == 'y' & testNumber < 3)
@@ -37,9 +37,10 @@ public class AutoRedLoad_V1 extends LinearOpMode
         holo.driveStraight_Inches(-5,.8);
         holo.driveStrafe_Inches(totalStrafeDist_In, .8);
         //drop skystone
-        holo.driveStrafe_Inches(-(totalStrafeDist_In + 28), .8);
+        holo.driveStrafe_Inches(-(totalStrafeDist_In - 25.5f), .8);
         //grab second skystone
-        holo.driveStrafe_Inches(totalStrafeDist_In + 20, .8);
+        holo.driveStraight_Inches(-5,.8);
+        holo.driveStrafe_Inches(totalStrafeDist_In + 25.5f, .8);
         //drop skystone
         holo.driveStrafe_Inches(-13,.8);
         holo.driveStraight_Inches(4,.8);*/

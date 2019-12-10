@@ -476,7 +476,7 @@ public class MecBot
             driveRightBack.setPower(Turn - Strafe + Forward);
         }
     }
-    public MecBot.Result wait_for_robot(double maxLookDistance_in, long timeToCheck_ms, double maxWait_s, boolean shiftLeft, LinearOpMode linearOpMode)
+    /*public MecBot.Result wait_for_robot(double maxLookDistance_in, long timeToCheck_ms, double maxWait_s, boolean shiftLeft, LinearOpMode linearOpMode)
     {
         double sensorDist = getFrontDistance_IN();
         resetRunTime();
@@ -501,19 +501,19 @@ public class MecBot
         {
             if (shiftLeft)//Left for now
             {
-                driveStrafe_Inches(-20, 1);
+                driveStrafe_Inches(-20, 1, this);
                 return Result.Left;//Return the fact that we shifted left
             } else //Right for now
             {
-                driveStrafe_Inches(20, 1);
+                driveStrafe_Inches(20, 1, this);
                 return Result.Right;//Return the fact that we shifted right
             }
         } else
         {
             return Result.Moved;//Return the fact that the object moved out of the way
         }
-    }
-    public void driveStraight_Inches(float dist_in, double pow)// this is the correct drive straight inches derived from our linear regression as of oct 23
+    }*/
+    public void driveStraight_Inches(float dist_in, double pow, LinearOpMode linearOpMode)// this is the correct drive straight inches derived from our linear regression as of oct 23
     {
         resetDriveEncoders();
 
@@ -531,13 +531,13 @@ public class MecBot
 
         float encoders_count = (float) (29.61*Math.abs(dist_in) - 8.462); //22.62x -13.02
 
-        while (Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
+        while (linearOpMode.opModeIsActive() && Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
         {
 
         }
         stopAllMotors();
     }
-    public void driveStrafe_Inches(float dist_in, double pow)
+    public void driveStrafe_Inches(float dist_in, double pow, LinearOpMode linearOpMode)
     {
         resetDriveEncoders();
 
@@ -559,13 +559,13 @@ public class MecBot
         }
         float encoders_count = (float) (32.74*Math.abs(dist_in) - 14.72); //24.83x - 7.55
 
-        while (Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
+        while (linearOpMode.opModeIsActive() && Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
         {
 
         }
         stopAllMotors();
     }
-    public void drivePivot_Degrees(float angle_deg, double pow)
+    public void drivePivot_Degrees(float angle_deg, double pow, LinearOpMode linearOpMode)
     {
         resetDriveEncoders();
 
@@ -580,7 +580,7 @@ public class MecBot
 
         float encoders_count = (float) (7.339 * Math.abs(angle_deg) + 8.147); //6.57x - 12.24
 
-        while (Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
+        while (linearOpMode.opModeIsActive() && Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
         {
 
         }
@@ -589,18 +589,23 @@ public class MecBot
     public void grabStone(LinearOpMode linearOpMode)
     {
         wristServo.setPosition(0.4);
+        linearOpMode.sleep(300);
         setLightsColor(RevBlinkinLedDriver.BlinkinPattern.RED);
         clamp(true);
         setLightsColor(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+        linearOpMode.sleep(300);
         wristServo.setPosition(0);
         setLightsColor(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
+        linearOpMode.sleep(700);
     }
     public void dropStone(LinearOpMode linearOpMode)
     {
-        wristServo.setPosition(.75);
-        clampServo.setPosition(1);
+        wristServo.setPosition(0.1);
+        clamp(false);
         linearOpMode.sleep(500);
         wristServo.setPosition(0);
+        clamp(true);
+        linearOpMode.sleep(700);
     }
     public double setWristPosition (double wristPosition)
     {
@@ -735,10 +740,6 @@ public class MecBot
         public void stopAllMotors()
         {
             holonomic(0,0,0,0);
-//            driveLeftFront.setPower(0);
-//            driveLeftBack.setPower(0);
-//            driveRightFront.setPower(0);
-//            driveRightBack.setPower(0);
         }
 
     /*public void initIMU()
@@ -857,15 +858,15 @@ public class MecBot
         float stepPivotAmtDeg = 15;
 
         DistanceSensor usingDistSensor = frontDistSens;
-        holonomic(0,0,.15, 1);
+        holonomic(0,0,.18, 1);
         setLightsColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);
         while (usingDistSensor.getDistance(DistanceUnit.INCH) > requiredDist_in && !linearOpMode.isStopRequested())
         {
-            linearOpMode.sleep(50);
-            linearOpMode.telemetry.addData("distanceFromWall: ", usingDistSensor.getDistance(DistanceUnit.INCH));
-            linearOpMode.telemetry.addData("Required Distance: ", requiredDist_in);
-            linearOpMode.telemetry.addData("Hi: ", "hello");
-            linearOpMode.telemetry.update();
+            linearOpMode.idle();
+         //   linearOpMode.sleep(50);
+         //   linearOpMode.telemetry.addData("distanceFromWall: ", usingDistSensor.getDistance(DistanceUnit.INCH));
+         //   linearOpMode.telemetry.addData("Required Distance: ", requiredDist_in);
+         //   linearOpMode.telemetry.update();
         }
         stopDriveMotors();
     }

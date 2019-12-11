@@ -15,8 +15,8 @@ public class AutoRedLoad_V1 extends LinearOpMode
 
         //red loading side, robot facing the cubes in the middle, outside of the left wheels lined
         //up with the outside edge closer to the build zone of the second square from the audience side
-        holo.driveStraight_Inches(24.5f, .9, this);
-        holo.driveStrafe_Inches(-21,.9, this); //was 16 but added 8 for the sensor distance adjustment
+        holo.driveStraight_Inches(24.5f, .8, this);
+        holo.driveStrafe_Inches(-21,.8, this); //was 16 but added 8 for the sensor distance adjustment
         char colorSkystone = holo.getColor();
         int testNumber = 1;
         float totalStrafeDist_In = -74;
@@ -24,7 +24,7 @@ public class AutoRedLoad_V1 extends LinearOpMode
         telemetry.update();
         while (colorSkystone == 'y' & testNumber < 3)
         {
-            holo.driveStrafe_Inches(-8, .9, this);
+            holo.driveStrafe_Inches(-8, .8, this);
             totalStrafeDist_In = totalStrafeDist_In + 8;
             colorSkystone = holo.getColor();
             testNumber = testNumber + 1;
@@ -37,15 +37,17 @@ public class AutoRedLoad_V1 extends LinearOpMode
         holo.clamp(false);
         holo.kissWall(requiredDist_in, intervalDistance, this);
         holo.grabStone(this);
-        /*holo.driveStraight_Inches(-5,.9, this);
-        holo.driveStrafe_Inches(totalStrafeDist_In, .9, this);
+        /*holo.driveStraight_Inches(-5,.8, this);
+        holo.driveStrafe_Inches(totalStrafeDist_In, .8, this);
         holo.dropStone(this);
-        holo.driveStrafe_Inches(-(totalStrafeDist_In + 28), .9, this);
+        holo.driveStrafe_Inches(-(totalStrafeDist_In + 28), .8, this);
+        holo.clamp(false);
+        holo.kissWall(requiredDist_in, intervalDistance, this);
         holo.grabStone(this);
-        holo.driveStrafe_Inches(totalStrafeDist_In + 20, .9, this);
-        holo.dropStone(this);
-        holo.driveStrafe_Inches(-10,.9, this);
-        holo.driveStraight_Inches(4,.9, this);*/
+        holo.driveStraight_Inches(-5,.8, this);
+        holo.drivePivot_Degrees(-95,.9, this);
+        holo.driveStraight_Inches(-(totalStrafeDist_In + 20), .9, this);
+        holo.driveStraight_Inches(-10,.9, this);*/
         holo.stopAllMotors();
     }
 }

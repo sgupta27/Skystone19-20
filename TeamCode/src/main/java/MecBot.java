@@ -580,7 +580,7 @@ public class MecBot
     public void grabStone(LinearOpMode linearOpMode)
     {
         wristServo.setPosition(0.4);
-        linearOpMode.sleep(300);
+        linearOpMode.sleep(500);
         setLightsColor(RevBlinkinLedDriver.BlinkinPattern.RED);
         clamp(true);
         setLightsColor(RevBlinkinLedDriver.BlinkinPattern.BLUE);
@@ -851,12 +851,12 @@ public class MecBot
         float stepPivotAmtDeg = 15;
 
         DistanceSensor usingDistSensor = frontDistSens;
-        holonomic(0,0,.18, 1);
+        holonomic(0,0,.2, 1);
         setLightsColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);
         while (usingDistSensor.getDistance(DistanceUnit.INCH) > requiredDist_in && !linearOpMode.isStopRequested())
         {
-            linearOpMode.idle();
-         //   linearOpMode.sleep(50);
+//            linearOpMode.idle();
+              linearOpMode.sleep(50);
          //   linearOpMode.telemetry.addData("distanceFromWall: ", usingDistSensor.getDistance(DistanceUnit.INCH));
          //   linearOpMode.telemetry.addData("Required Distance: ", requiredDist_in);
          //   linearOpMode.telemetry.update();

@@ -108,8 +108,11 @@ public class MecTeleController extends OpMode
         }
         telemetry.addData("shoulder position = ", holo.getShoulderPosition());
         telemetry.addData("last shoulder position = ", lastShoulderPosition);
-
-        if (gamepad2.right_bumper) //wrist code from last year
+        if (gamepad2.y)
+        {
+            wristPosition = 0;
+        }
+        else if (gamepad2.right_bumper) //wrist code from last year
         {
             wristPosition -= .0038;
         }

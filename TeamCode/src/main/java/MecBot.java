@@ -581,12 +581,9 @@ public class MecBot
     {
         wristServo.setPosition(0.4);
         linearOpMode.sleep(500);
-        setLightsColor(RevBlinkinLedDriver.BlinkinPattern.RED);
         clamp(true);
-        setLightsColor(RevBlinkinLedDriver.BlinkinPattern.BLUE);
-        linearOpMode.sleep(300);
+        linearOpMode.sleep(500);
         wristServo.setPosition(0);
-        setLightsColor(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
         linearOpMode.sleep(700);
     }
     public void dropStone(LinearOpMode linearOpMode)
@@ -852,7 +849,6 @@ public class MecBot
 
         DistanceSensor usingDistSensor = frontDistSens;
         holonomic(0,0,.2, 1);
-        setLightsColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);
         while (usingDistSensor.getDistance(DistanceUnit.INCH) > requiredDist_in && !linearOpMode.isStopRequested())
         {
 //            linearOpMode.idle();

@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@TeleOp(name = "MecTestTele")
+@Disabled()
 public class MecTestTele extends OpMode
 {
     private MecBot holo;

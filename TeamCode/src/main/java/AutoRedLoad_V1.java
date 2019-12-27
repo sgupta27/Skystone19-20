@@ -37,8 +37,10 @@ public class AutoRedLoad_V1 extends LinearOpMode
         holo.clamp(false);
         holo.kissWall(requiredDist_in, intervalDistance, this);
         holo.grabStone(this);
-        holo.driveStraight_Inches(-2,.9, this);
-        holo.driveStrafe_Inches(totalStrafeDist_In, .8, this);
+        //holo.driveStraight_Inches(-2,.9, this);
+        holo.driveStrafe_Inches((totalStrafeDist_In/2), .8, this);
+        holo.drivePivot_Degrees(6,.8,this);
+        holo.driveStrafe_Inches((totalStrafeDist_In/2),.8,this);
         holo.dropStone(this);
         if (Math.abs(totalStrafeDist_In) <= 59)
         {
@@ -46,9 +48,8 @@ public class AutoRedLoad_V1 extends LinearOpMode
             totalStrafeDist_In += 8;
             requiredDist_in = requiredDist_in + 0.5f; //further away from stone for just end block
         }
-        holo.driveStrafe_Inches(-(totalStrafeDist_In - 23f), .8, this);
+        holo.driveStrafe_Inches(-((totalStrafeDist_In - 27f)), .8, this);
         holo.clamp(false);
-        holo.drivePivot_Degrees(6,.8,this);
         holo.kissWall(requiredDist_in, intervalDistance, this);
         holo.grabStone(this);
         holo.driveStraight_Inches(-5,.8, this);
@@ -56,6 +57,10 @@ public class AutoRedLoad_V1 extends LinearOpMode
         holo.driveStrafe_Inches(-6,.9,this);
         holo.driveStraight_Inches(totalStrafeDist_In - 23, .9, this);
         holo.driveStraight_Inches(-15,.9, this);
-        holo.stopAllMotors();
+        while (opModeIsActive() && !isStopRequested())
+        {
+            holo.stopDriveMotors();
+            holo.stopAllMotors();
+        }
     }
 }

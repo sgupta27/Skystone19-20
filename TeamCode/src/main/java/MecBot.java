@@ -577,6 +577,16 @@ public class MecBot
         }
         stopDriveMotors();
     }
+    public void wristDown (LinearOpMode linearOpMode)
+    {
+        wristServo.setPosition(0.4);
+        linearOpMode.sleep(500);
+    }
+    public void wristUp (LinearOpMode linearOpMode)
+    {
+        wristServo.setPosition(0);
+        linearOpMode.sleep(700);
+    }
     public void grabStone(LinearOpMode linearOpMode)
     {
         wristServo.setPosition(0.4);
@@ -608,8 +618,8 @@ public class MecBot
     {
         if (shoulderPower_PCT < -1.0)
             shoulderPower_PCT = -1.0;
-         else if (shoulderPower_PCT > 1.0)
-             shoulderPower_PCT = 1.0;
+         else if (shoulderPower_PCT > 0.1)
+             shoulderPower_PCT = 0.1;
         shoulderMotor.setPower(shoulderPower_PCT);
         return shoulderPower_PCT;
     }
@@ -629,10 +639,10 @@ public class MecBot
     }
     public double setArmPower(double armPower_PCT)
     {
-        if (armPower_PCT < -0.3)
-            armPower_PCT = -0.3;
-        else if (armPower_PCT > 1.0)
-            armPower_PCT = 1.0;
+        if (armPower_PCT < -1)
+            armPower_PCT = -1;
+        else if (armPower_PCT > 0.5)
+            armPower_PCT = 0.5;
         armMotor.setPower(armPower_PCT);
         return armPower_PCT;
     }

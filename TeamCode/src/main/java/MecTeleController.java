@@ -90,23 +90,29 @@ public class MecTeleController extends OpMode
         holo.setArmPower(armPower);
 
         //The entire arm pivot controls or shoulder controls
-        double shoulderPower = gamepad2.right_stick_y;
-        double shoulderPosition = holo.getShoulderPosition();
-        if (Math.abs(shoulderPower) > 0.05)
+        double shoulderPower_PCT = gamepad2.right_stick_y;
+        double shoulderPosition_ENC = holo.getShoulderPosition();
+        if (Math.abs(shoulderPower_PCT) > 0.05)
         {
-            if (shoulderPower < 0.0f)
+            if (shoulderPower_PCT < 0.0f)
             {
-                shoulderPower *= 0.5f; //negative is up
+                shoulderPower_PCT *= 0.5f; //negative is up
             }
             else
             {
-                shoulderPosition *= 0.1; //gravity is helping us
+                shoulderPower_PCT *= 0.2; //gravity is helping us
             }
-            holo.setShoulderPower(shoulderPower); //play with the denominator if needed to slow down
-            wristPosition = Math.abs(shoulderPosition) * 0.000511 + 0.3986;
-            lastShoulderPosition = shoulderPosition;
+            shoulderPower_PCT += -0.1;//small up to account for gravity
+            holo.setShoulderPower(shoulderPower_PCT); //play with the denominator if needed to slow down
+            if (shoulderPower_PCT > 0){
+                wristPosition = Math.abs(shoulderPosition_ENC) * 0.0005887 + 0.4294;
+            }else{
+                wristPosition = Math.abs(shoulderPosition_ENC) * 0.0005158 + 0.3875;
+            }
+            //wristPosition = Math.abs(shoulderPosition_ENC) * 0.000511 + 0.3986;
+            lastShoulderPosition = shoulderPosition_ENC;
         }
-        else if(shoulderPosition > lastShoulderPosition)
+        else if(shoulderPosition_ENC > lastShoulderPosition)
         {
             holo.setShoulderPower(-0.24);
         }

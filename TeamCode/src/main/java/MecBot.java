@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import android.graphics.Color;
@@ -34,8 +35,9 @@ public class MecBot
         double velocitiesL = 0;
 
         private ColorSensor frontColorSens;
- 
-        private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
+        private TouchSensor blockTouchSens;
+
+    private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
         private float roboDiameterCm = (float) (45.7 * Math.PI); // can be adjusted
         private float wheelCircIn = 4 * (float) Math.PI; //Circumference of wheels used
         private float wheelCircCm = (float) (9.8 * Math.PI);
@@ -57,6 +59,7 @@ public class MecBot
         private void initSensors(HardwareMap hMap)
         {
             frontColorSens = hMap.get(ColorSensor.class, "frontColorSens");
+            blockTouchSens = hMap.get(TouchSensor.class, "blockTouchSens");
             int tempColor = getFrontColorSens().getVersion();
             systemAccess.telemetry.addData("version", tempColor);
             systemAccess.telemetry.addData("Class: ", RevBlinkinLedDriver.class);
@@ -872,11 +875,21 @@ public class MecBot
         holonomic(0,0,.2, 1);
         while (usingDistSensor.getDistance(DistanceUnit.INCH) > requiredDist_in && !linearOpMode.isStopRequested())
         {
-//            linearOpMode.idle();
               linearOpMode.sleep(50);
          //   linearOpMode.telemetry.addData("distanceFromWall: ", usingDistSensor.getDistance(DistanceUnit.INCH));
          //   linearOpMode.telemetry.addData("Required Distance: ", requiredDist_in);
          //   linearOpMode.telemetry.update();
+        }
+        stopDriveMotors();
+    }
+    public void kissBlock(LinearOpMode linearOpMode)
+    {
+        wristServo.setPosition(0.4);
+        linearOpMode.sleep(500);
+        holonomic(0,0,.2,1);
+        while (!blockTouchSens.isPressed() && !linearOpMode.isStopRequested())
+        {
+            linearOpMode.sleep(50);
         }
         stopDriveMotors();
     }

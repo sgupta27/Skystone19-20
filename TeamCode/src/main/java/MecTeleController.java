@@ -68,7 +68,7 @@ public class MecTeleController extends OpMode
         double Strafe = -gamepad1.left_stick_x;
         double Turn = -gamepad1.right_stick_x;
         //double RightY = gamepad1.right_stick_y;
-        double MAX_SPEED = .8;
+        double MAX_SPEED = 1;
         double runTime = holo.getRunTime();
         telemetry.addData("Forward: ", Forward); //Removed for testing
         telemetry.addData("Strafe: ", Strafe);
@@ -114,8 +114,8 @@ public class MecTeleController extends OpMode
         {
             holo.setShoulderPower(0.0);
         }
-        telemetry.addData("shoulder position = ", holo.getShoulderPosition());
-        telemetry.addData("last shoulder position = ", lastShoulderPosition);
+      //  telemetry.addData("shoulder position = ", holo.getShoulderPosition());
+     //   telemetry.addData("last shoulder position = ", lastShoulderPosition);
         if (gamepad2.y)
         {
             wristPosition = 0;

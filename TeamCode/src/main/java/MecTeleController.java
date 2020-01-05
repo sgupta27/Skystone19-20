@@ -68,7 +68,7 @@ public class MecTeleController extends OpMode
         double Strafe = -gamepad1.left_stick_x;
         double Turn = -gamepad1.right_stick_x;
         //double RightY = gamepad1.right_stick_y;
-        double MAX_SPEED = .8;
+        double MAX_SPEED = 1;
         double runTime = holo.getRunTime();
         telemetry.addData("Forward: ", Forward); //Removed for testing
         telemetry.addData("Strafe: ", Strafe);
@@ -94,7 +94,15 @@ public class MecTeleController extends OpMode
         double shoulderPosition = holo.getShoulderPosition();
         if (Math.abs(shoulderPower) > 0.05)
         {
-            holo.setShoulderPower(shoulderPower * 0.5); //play with the denominator if needed to slow down
+            if (shoulderPower < 0.0f)
+            {
+                shoulderPower *= 0.5f; //negative is up
+            }
+            else
+            {
+                shoulderPosition *= 0.1; //gravity is helping us
+            }
+            holo.setShoulderPower(shoulderPower); //play with the denominator if needed to slow down
             wristPosition = Math.abs(shoulderPosition) * 0.000511 + 0.3986;
             lastShoulderPosition = shoulderPosition;
         }
@@ -106,8 +114,8 @@ public class MecTeleController extends OpMode
         {
             holo.setShoulderPower(0.0);
         }
-        telemetry.addData("shoulder position = ", holo.getShoulderPosition());
-        telemetry.addData("last shoulder position = ", lastShoulderPosition);
+      //  telemetry.addData("shoulder position = ", holo.getShoulderPosition());
+     //   telemetry.addData("last shoulder position = ", lastShoulderPosition);
         if (gamepad2.y)
         {
             wristPosition = 0;

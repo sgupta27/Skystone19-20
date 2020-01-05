@@ -91,10 +91,10 @@ public class MecBot
             wristServo.setDirection(Servo.Direction.FORWARD);
             wristServo.setPosition(0.0);
 
-            driveRightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-            driveRightBack.setDirection(DcMotorSimple.Direction.REVERSE);
-            driveLeftFront.setDirection(DcMotorSimple.Direction.FORWARD);
-            driveLeftBack.setDirection(DcMotorSimple.Direction.FORWARD);
+            driveRightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+            driveRightBack.setDirection(DcMotorSimple.Direction.FORWARD);
+            driveLeftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+            driveLeftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
             driveLeftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             driveRightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -161,11 +161,12 @@ public class MecBot
 //            driveRightBack.setPower(pow);
 //            driveLeftFront.setPower(pow);
 
-            systemAccess.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+          /*  systemAccess.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
             systemAccess.telemetry.addData("leftFront encoders: ", getLeftBackEncoderPos());
             systemAccess.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
             systemAccess.telemetry.addData("leftBack encoders: ", getLeftFrontEncoderPos());
-            systemAccess.telemetry.update();
+            systemAccess.telemetry.addData("power", pow);
+            systemAccess.telemetry.update();  */
 
             encoders=Math.abs(encoders);
 
@@ -174,11 +175,11 @@ public class MecBot
 
             }
             stopDriveMotors();
-            systemAccess.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+           /* systemAccess.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
             systemAccess.telemetry.addData("leftBack encoders: ", getLeftBackEncoderPos());
             systemAccess.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
             systemAccess.telemetry.addData("leftFront encoders: ", getLeftFrontEncoderPos());
-            systemAccess.telemetry.update();
+            systemAccess.telemetry.update();  */
         }
 
         public void driveMotorsAuto(float lPow, float rPow)
@@ -454,18 +455,25 @@ public class MecBot
             Strafe = Strafe/Magnitude;
             Forward = Forward/Magnitude;
         }
+        systemAccess.telemetry.addData("turn", Turn);
+        systemAccess.telemetry.addData("strafe", Strafe);
+        systemAccess.telemetry.addData("forward", Forward);
+        systemAccess.telemetry.update();
 
         driveLeftFront.setPower(-Turn - Strafe + Forward);
-        if (driveLeftBack != null)
-        {
-            driveLeftBack.setPower(-Turn + Strafe + Forward);
-        }
-
-        driveRightFront.setPower(Turn + Strafe + Forward);
-        if (driveRightBack !=null)
+        if (driveRightBack != null)
         {
             driveRightBack.setPower(Turn - Strafe + Forward);
+
         }
+
+        driveLeftBack.setPower(-Turn + Strafe + Forward);
+        if (driveRightFront !=null)
+        {
+            driveRightFront.setPower(Turn + Strafe + Forward);
+        }
+
+
     }
     /*public MecBot.Result wait_for_robot(double maxLookDistance_in, long timeToCheck_ms, double maxWait_s, boolean shiftLeft, LinearOpMode linearOpMode)
     {
@@ -520,7 +528,10 @@ public class MecBot
 //            driveLeftFront.setPower(.8);
 //            driveLeftBack.setPower(-.8);
 
-        float encoders_count = (float) (29.61*Math.abs(dist_in) - 8.462); //22.62x -13.02
+        float encoders_count = (float) (87.38*Math.abs(dist_in) - 114.96); //22.62x -13.02      29.61x-8.462     91.83x  - 63.03
+
+       // systemAccess.telemetry.addData("power", pow);
+       // systemAccess.telemetry.update();
 
         while (linearOpMode.opModeIsActive() && Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
         {
@@ -548,7 +559,7 @@ public class MecBot
 //            driveLeftFront.setPower(.8);
 //            driveLeftBack.setPower(-.8);
         }
-        float encoders_count = (float) (32.74*Math.abs(dist_in) - 14.72); //24.83x - 7.55
+        float encoders_count = (float) (99.32*Math.abs(dist_in) - 36.94); //24.83x - 7.55     32.74x - 14.72
 
         while (linearOpMode.opModeIsActive() && Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
         {
@@ -569,13 +580,23 @@ public class MecBot
             holonomic(pow,0,0,1);
         }
 
-        float encoders_count = (float) (7.339 * Math.abs(angle_deg) + 8.147); //6.57x - 12.24
+        float encoders_count = (float) (47.1804 * Math.abs(angle_deg) + 20.474); //6.57x - 12.24    7.339x+8.147
 
         while (linearOpMode.opModeIsActive() && Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
         {
 
         }
         stopDriveMotors();
+    }
+    public void wristDown (LinearOpMode linearOpMode)
+    {
+        wristServo.setPosition(0.4);
+        linearOpMode.sleep(500);
+    }
+    public void wristUp (LinearOpMode linearOpMode)
+    {
+        wristServo.setPosition(0);
+        linearOpMode.sleep(700);
     }
     public void grabStone(LinearOpMode linearOpMode)
     {
@@ -608,8 +629,8 @@ public class MecBot
     {
         if (shoulderPower_PCT < -1.0)
             shoulderPower_PCT = -1.0;
-         else if (shoulderPower_PCT > 1.0)
-             shoulderPower_PCT = 1.0;
+         else if (shoulderPower_PCT > 0.1)
+             shoulderPower_PCT = 0.1;
         shoulderMotor.setPower(shoulderPower_PCT);
         return shoulderPower_PCT;
     }
@@ -629,10 +650,10 @@ public class MecBot
     }
     public double setArmPower(double armPower_PCT)
     {
-        if (armPower_PCT < -0.3)
-            armPower_PCT = -0.3;
-        else if (armPower_PCT > 1.0)
-            armPower_PCT = 1.0;
+        if (armPower_PCT < -1)
+            armPower_PCT = -1;
+        else if (armPower_PCT > 0.5)
+            armPower_PCT = 0.5;
         armMotor.setPower(armPower_PCT);
         return armPower_PCT;
     }

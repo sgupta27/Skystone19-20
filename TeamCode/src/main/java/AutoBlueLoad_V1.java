@@ -34,13 +34,13 @@ public class AutoBlueLoad_V1 extends LinearOpMode
             telemetry.addData("stone color 2 = ", colorSkystone);
             telemetry.update();
         }
-        float requiredDist_in = 4.75f; //4.5
+        float requiredDist_in = 5.5f; //4.5
         float intervalDistance = 7; //What is this supposed to do?
         holo.clamp(false);
         holo.kissWall(requiredDist_in, intervalDistance, this);
         holo.drivePivot_Degrees(6,.4,this);
         holo.grabStone(this);
-        holo.driveStraight_Inches(-5,.9, this);
+        holo.driveStraight_Inches(-2,.9, this);
         holo.driveStrafe_Inches(totalStrafeDist_In, .9, this);
         holo.dropStone(this);
         if (Math.abs(totalStrafeDist_In) <= 59)
@@ -48,7 +48,7 @@ public class AutoBlueLoad_V1 extends LinearOpMode
             // back up one stone so not off end
             totalStrafeDist_In -= 8;
         }
-        holo.driveStrafe_Inches(-(totalStrafeDist_In + 25.5f), .8, this);
+        holo.driveStrafe_Inches(-(totalStrafeDist_In + 21.5f), .8, this);
         holo.clamp(false);
         holo.kissWall(requiredDist_in, intervalDistance, this);
         holo.grabStone(this);

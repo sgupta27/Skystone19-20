@@ -27,6 +27,23 @@ public class MecTestTele extends OpMode
 
     public void loop()
     {
+        if (gamepad1.a)
+        {
+            holo.driveRightFront(0.8f);
+        }
+        if (gamepad1.b)
+        {
+            holo.driveRightBack(0.8f);
+        }
+        if (gamepad1.x)
+        {
+            holo.driveLeftFront(0.8f);
+
+        }
+        if (gamepad1.y)
+        {
+            holo.driveLeftBack(0.8f);
+        }
         /*if (gamepad1.a)
         {
             //holo.driveStraight_Enc(100f, .5);

@@ -1,3 +1,4 @@
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,7 +9,7 @@ import android.graphics.Color;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@TeleOp(name = "ColorSensor_Test")
+@Disabled()
 public class ColorSensor_Test extends OpMode
 {
     //  private OmniDriveBot robot = new OmniDriveBot();

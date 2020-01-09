@@ -1,3 +1,5 @@
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -27,26 +29,43 @@ public class MecTestTele extends OpMode
     {
         if (gamepad1.a)
         {
+            holo.driveRightFront(0.8f);
+        }
+        if (gamepad1.b)
+        {
+            holo.driveRightBack(0.8f);
+        }
+        if (gamepad1.x)
+        {
+            holo.driveLeftFront(0.8f);
+
+        }
+        if (gamepad1.y)
+        {
+            holo.driveLeftBack(0.8f);
+        }
+        /*if (gamepad1.a)
+        {
             //holo.driveStraight_Enc(100f, .5);
-            holo.driveStraight_Inches(12, .8);
+            holo.driveStraight_Inches(12, .8, this);
         }
 
         if (gamepad1.b)
         {
             //holo.pivot_enc(1500);
-            holo.driveStrafe_Inches(12, .8);
+            holo.driveStrafe_Inches(12, .8, this);
         }
 
         if (gamepad1.x)
         {
             //holo.strafe_enc(-150);
-            holo.drivePivot_Degrees(-90, .8);
+            holo.drivePivot_Degrees(-90, .8, this);
         }
 
         if (gamepad1.y)
         {
             //holo.strafe_enc(150);
-            holo.driveStrafe_Inches(-12, .8);
+            holo.driveStrafe_Inches(-12, .8, this);
         }
 
         /*if (toggleSpeedMode)
@@ -78,6 +97,6 @@ public class MecTestTele extends OpMode
 
     public void stop()
     {
-        holo.stopAllMotors();
+//        holo.stopAllMotors();
     }
 }

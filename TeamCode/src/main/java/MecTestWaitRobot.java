@@ -1,7 +1,8 @@
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name = "MecTestWaitRobot")
+@Disabled()
 public class MecTestWaitRobot extends LinearOpMode
 {
     private MecBot holo;
@@ -9,7 +10,7 @@ public class MecTestWaitRobot extends LinearOpMode
 
     public void runOpMode()
     {
-        holo = new MecBot(hardwareMap, this);
+        /*holo = new MecBot(hardwareMap, this);
         holo.resetRunTime();
         waitForStart();
         double maxLookDistance_in = 12;
@@ -26,6 +27,6 @@ public class MecTestWaitRobot extends LinearOpMode
         telemetry.addData("Outside: ", true);
         telemetry.update();
         result = holo.wait_for_robot(maxLookDistance_in, timeToCheck_ms, maxWait_s, shiftLeft, this);
-
+*/
     }
 }

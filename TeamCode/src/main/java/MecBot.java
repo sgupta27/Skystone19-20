@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import android.graphics.Color;
@@ -20,10 +22,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class MecBot
 {
-    private DcMotorImplEx driveLeftFront, driveRightFront, driveLeftBack, driveRightBack;
+    private DcMotorImplEx driveLeftFront, driveRightFront, driveLeftBack, driveRightBack, shoulderMotor, armMotor;
 
         private OpMode systemAccess; //need access to telemetry (OpMode) and sometimes sleep (LinearOpMode)
         private DistanceSensor frontDistSens, rightDistSens, leftDistSens;
+        private Servo rightGrabServo, leftGrabServo, wristServo, clampServo;
         RevBlinkinLedDriver lights;
         Orientation angles;
         Acceleration gravity;
@@ -32,8 +35,9 @@ public class MecBot
         double velocitiesL = 0;
 
         private ColorSensor frontColorSens;
- 
-        private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
+        private TouchSensor blockTouchSens;
+
+    private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
         private float roboDiameterCm = (float) (45.7 * Math.PI); // can be adjusted
         private float wheelCircIn = 4 * (float) Math.PI; //Circumference of wheels used
         private float wheelCircCm = (float) (9.8 * Math.PI);
@@ -55,6 +59,7 @@ public class MecBot
         private void initSensors(HardwareMap hMap)
         {
             frontColorSens = hMap.get(ColorSensor.class, "frontColorSens");
+            blockTouchSens = hMap.get(TouchSensor.class, "blockTouchSens");
             int tempColor = getFrontColorSens().getVersion();
             systemAccess.telemetry.addData("version", tempColor);
             systemAccess.telemetry.addData("Class: ", RevBlinkinLedDriver.class);
@@ -72,16 +77,39 @@ public class MecBot
             driveLeftBack = hMap.get(DcMotorImplEx.class, "driveLeftBack");
             driveRightFront = hMap.get(DcMotorImplEx.class, "driveRightFront");
 
+            shoulderMotor = hMap.get(DcMotorImplEx.class, "shoulderMotor");
+            armMotor = hMap.get(DcMotorImplEx.class, "armMotor");
 
-            driveRightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-            driveRightBack.setDirection(DcMotorSimple.Direction.REVERSE);
-            driveLeftFront.setDirection(DcMotorSimple.Direction.FORWARD);
-            driveLeftBack.setDirection(DcMotorSimple.Direction.FORWARD);
+            rightGrabServo = hMap.servo.get("rightGrabServo");
+            rightGrabServo.setDirection(Servo.Direction.FORWARD);
+
+            leftGrabServo = hMap.servo.get("leftGrabServo");
+            leftGrabServo.setDirection(Servo.Direction.FORWARD);
+
+            clampServo = hMap.servo.get("clampServo");
+            clampServo.setDirection(Servo.Direction.FORWARD);
+            clampServo.setPosition(0.55);
+
+            wristServo = hMap.servo.get("wristServo");
+            wristServo.setDirection(Servo.Direction.FORWARD);
+            wristServo.setPosition(0.0);
+
+            driveRightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+            driveRightBack.setDirection(DcMotorSimple.Direction.FORWARD);
+            driveLeftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+            driveLeftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
             driveLeftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             driveRightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             driveLeftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             driveRightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+            shoulderMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            shoulderMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+            platformRelease();
 
             stopAllMotors();
 
@@ -136,11 +164,12 @@ public class MecBot
 //            driveRightBack.setPower(pow);
 //            driveLeftFront.setPower(pow);
 
-            systemAccess.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+          /*  systemAccess.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
             systemAccess.telemetry.addData("leftFront encoders: ", getLeftBackEncoderPos());
             systemAccess.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
             systemAccess.telemetry.addData("leftBack encoders: ", getLeftFrontEncoderPos());
-            systemAccess.telemetry.update();
+            systemAccess.telemetry.addData("power", pow);
+            systemAccess.telemetry.update();  */
 
             encoders=Math.abs(encoders);
 
@@ -148,12 +177,12 @@ public class MecBot
             {
 
             }
-            stopAllMotors();
-            systemAccess.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
+            stopDriveMotors();
+           /* systemAccess.telemetry.addData("rightFront encoders: ", getRightFrontEncoderPos());
             systemAccess.telemetry.addData("leftBack encoders: ", getLeftBackEncoderPos());
             systemAccess.telemetry.addData("rightBack encoders: ", getRightBackEncoderPos());
             systemAccess.telemetry.addData("leftFront encoders: ", getLeftFrontEncoderPos());
-            systemAccess.telemetry.update();
+            systemAccess.telemetry.update();  */
         }
 
         public void driveMotorsAuto(float lPow, float rPow)
@@ -225,10 +254,6 @@ public class MecBot
     public void stopDriveMotors()
         {
             holonomic(0,0,0,0);
-//            driveLeftFront.setPower(0);
-//            driveLeftBack.setPower(0);
-//            driveRightFront.setPower(0);
-//            driveRightBack.setPower(0);
         }
 
         public void spin_Right(float degrees)
@@ -260,7 +285,7 @@ public class MecBot
                 }
             }
 
-            stopAllMotors();
+            stopDriveMotors();
         }
 
     /*public void spin_Right_IMU(float degrees, double pow)
@@ -321,7 +346,7 @@ public class MecBot
                 }
             }
 
-            stopAllMotors();
+            stopDriveMotors();
         }
 
         /*public void spin_Left_IMU(float deg, double pow)
@@ -389,8 +414,6 @@ public class MecBot
             {
 
             }
-            stopAllMotors();
-            stopAllMotors();
             stopDriveMotors();
         }
 
@@ -422,8 +445,6 @@ public class MecBot
         {
 
         }
-        stopAllMotors();
-        stopAllMotors();
         stopDriveMotors();
     }
     public void holonomic(double Turn, double Strafe, double Forward, double MAX_SPEED)
@@ -437,20 +458,27 @@ public class MecBot
             Strafe = Strafe/Magnitude;
             Forward = Forward/Magnitude;
         }
+        systemAccess.telemetry.addData("turn", Turn);
+        systemAccess.telemetry.addData("strafe", Strafe);
+        systemAccess.telemetry.addData("forward", Forward);
+        systemAccess.telemetry.update();
 
         driveLeftFront.setPower(-Turn - Strafe + Forward);
-        if (driveLeftBack != null)
-        {
-            driveLeftBack.setPower(-Turn + Strafe + Forward);
-        }
-
-        driveRightFront.setPower(Turn + Strafe + Forward);
-        if (driveRightBack !=null)
+        if (driveRightBack != null)
         {
             driveRightBack.setPower(Turn - Strafe + Forward);
+
         }
+
+        driveLeftBack.setPower(-Turn + Strafe + Forward);
+        if (driveRightFront !=null)
+        {
+            driveRightFront.setPower(Turn + Strafe + Forward);
+        }
+
+
     }
-    public MecBot.Result wait_for_robot(double maxLookDistance_in, long timeToCheck_ms, double maxWait_s, boolean shiftLeft, LinearOpMode linearOpMode)
+    /*public MecBot.Result wait_for_robot(double maxLookDistance_in, long timeToCheck_ms, double maxWait_s, boolean shiftLeft, LinearOpMode linearOpMode)
     {
         double sensorDist = getFrontDistance_IN();
         resetRunTime();
@@ -475,19 +503,19 @@ public class MecBot
         {
             if (shiftLeft)//Left for now
             {
-                driveStrafe_Inches(-20, 1);
+                driveStrafe_Inches(-20, 1, this);
                 return Result.Left;//Return the fact that we shifted left
             } else //Right for now
             {
-                driveStrafe_Inches(20, 1);
+                driveStrafe_Inches(20, 1, this);
                 return Result.Right;//Return the fact that we shifted right
             }
         } else
         {
             return Result.Moved;//Return the fact that the object moved out of the way
         }
-    }
-    public void driveStraight_Inches(float dist_in, double pow)// this is the correct drive straight inches derived from our linear regression as of oct 23
+    }*/
+    public void driveStraight_Inches(float dist_in, double pow, LinearOpMode linearOpMode)// this is the correct drive straight inches derived from our linear regression as of oct 23
     {
         resetDriveEncoders();
 
@@ -503,15 +531,18 @@ public class MecBot
 //            driveLeftFront.setPower(.8);
 //            driveLeftBack.setPower(-.8);
 
-        float encoders_count = (float) (29.61*Math.abs(dist_in) - 8.462); //22.62x -13.02
+        float encoders_count = (float) (87.38*Math.abs(dist_in) - 114.96); //22.62x -13.02      29.61x-8.462     91.83x  - 63.03
 
-        while (Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
+       // systemAccess.telemetry.addData("power", pow);
+       // systemAccess.telemetry.update();
+
+        while (linearOpMode.opModeIsActive() && Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
         {
 
         }
-        stopAllMotors();
+        stopDriveMotors();
     }
-    public void driveStrafe_Inches(float dist_in, double pow)
+    public void driveStrafe_Inches(float dist_in, double pow, LinearOpMode linearOpMode)
     {
         resetDriveEncoders();
 
@@ -531,43 +562,114 @@ public class MecBot
 //            driveLeftFront.setPower(.8);
 //            driveLeftBack.setPower(-.8);
         }
-        float encoders_count = (float) (32.74*Math.abs(dist_in) - 14.72); //24.83x - 7.55
+        float encoders_count = (float) (99.32*Math.abs(dist_in) - 36.94); //24.83x - 7.55     32.74x - 14.72
 
-        while (Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
+        while (linearOpMode.opModeIsActive() && Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
         {
 
         }
-        stopAllMotors();
+        stopDriveMotors();
     }
-    public void drivePivot_Degrees(float angle_deg, double pow)
+    public void drivePivot_Degrees(float angle_deg, double pow, LinearOpMode linearOpMode)
     {
         resetDriveEncoders();
 
         if (angle_deg < 0) //Pivot clockwise
         {
             holonomic(-pow, 0,0,1);
-//                driveRightFront.setPower(.8);
-//                driveRightBack.setPower(.8);
-//                driveLeftFront.setPower(-.8);
-//                driveLeftBack.setPower(-.8);
-
         }
         else //Counterclockwise
         {
             holonomic(pow,0,0,1);
-//                driveRightFront.setPower(-.8);
-//                driveRightBack.setPower(-.8);
-//                driveLeftFront.setPower(.8);
-//                driveLeftBack.setPower(.8);
         }
 
-        float encoders_count = (float) (7.339 * Math.abs(angle_deg) + 8.147); //6.57x - 12.24
+        float encoders_count = (float) (47.1804 * Math.abs(angle_deg) + 20.474); //6.57x - 12.24    7.339x+8.147
 
-        while (Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
+        while (linearOpMode.opModeIsActive() && Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
         {
 
         }
-        stopAllMotors();
+        stopDriveMotors();
+    }
+    public void wristDown (LinearOpMode linearOpMode)
+    {
+        wristServo.setPosition(0.4);
+        linearOpMode.sleep(500);
+    }
+    public void wristUp (LinearOpMode linearOpMode)
+    {
+        wristServo.setPosition(0);
+        linearOpMode.sleep(700);
+    }
+    public void grabStone(LinearOpMode linearOpMode)
+    {
+        wristServo.setPosition(0.4);
+        linearOpMode.sleep(500);
+        clamp(true);
+        linearOpMode.sleep(500);
+        wristServo.setPosition(0);
+        linearOpMode.sleep(700);
+    }
+    public void dropStone(LinearOpMode linearOpMode)
+    {
+        wristServo.setPosition(0.1);
+        clamp(false);
+        linearOpMode.sleep(500);
+        wristServo.setPosition(0);
+        clamp(true);
+        linearOpMode.sleep(700);
+    }
+    public double setWristPosition (double wristPosition)
+    {
+        if (wristPosition < 0)
+            wristPosition = 0;
+        else if (wristPosition > .75)
+            wristPosition = .75;
+        wristServo.setPosition(wristPosition);
+        return wristPosition;
+    }
+    public double setShoulderPower (double shoulderPower_PCT)
+    {
+        if (shoulderPower_PCT < -1.0)
+            shoulderPower_PCT = -1.0;
+         else if (shoulderPower_PCT > 0.1)
+             shoulderPower_PCT = 0.1;
+        shoulderMotor.setPower(shoulderPower_PCT);
+        return shoulderPower_PCT;
+    }
+    public double getShoulderPosition()
+    {
+        return shoulderMotor.getCurrentPosition();
+    }
+    public void platformGrab()
+    {
+        leftGrabServo.setPosition(0.6);
+        rightGrabServo.setPosition(0.0);
+    }
+    public void platformRelease()
+    {
+        leftGrabServo.setPosition(0.1);
+        rightGrabServo.setPosition(0.6);
+    }
+    public double setArmPower(double armPower_PCT)
+    {
+        if (armPower_PCT < -1)
+            armPower_PCT = -1;
+        else if (armPower_PCT > 0.5)
+            armPower_PCT = 0.5;
+        armMotor.setPower(armPower_PCT);
+        return armPower_PCT;
+    }
+    public void clamp(boolean close)
+    {
+            if (close)
+            {
+                clampServo.setPosition(0.55);
+            }
+            else
+            {
+                clampServo.setPosition(1.0);
+            }
     }
     /*public void pivot_IMU(float degrees_IN)
     {
@@ -649,11 +751,9 @@ public class MecBot
         }
         public void stopAllMotors()
         {
-            holonomic(0,0,0,0);
-//            driveLeftFront.setPower(0);
-//            driveLeftBack.setPower(0);
-//            driveRightFront.setPower(0);
-//            driveRightBack.setPower(0);
+            stopDriveMotors();
+            setShoulderPower(0.0);
+            setArmPower(0.0);
         }
 
     /*public void initIMU()
@@ -772,14 +872,24 @@ public class MecBot
         float stepPivotAmtDeg = 15;
 
         DistanceSensor usingDistSensor = frontDistSens;
-        holonomic(0,0,.15, 1);
+        holonomic(0,0,.2, 1);
         while (usingDistSensor.getDistance(DistanceUnit.INCH) > requiredDist_in && !linearOpMode.isStopRequested())
         {
+              linearOpMode.sleep(50);
+         //   linearOpMode.telemetry.addData("distanceFromWall: ", usingDistSensor.getDistance(DistanceUnit.INCH));
+         //   linearOpMode.telemetry.addData("Required Distance: ", requiredDist_in);
+         //   linearOpMode.telemetry.update();
+        }
+        stopDriveMotors();
+    }
+    public void kissBlock(LinearOpMode linearOpMode)
+    {
+        wristServo.setPosition(0.4);
+        linearOpMode.sleep(500);
+        holonomic(0,0,.2,1);
+        while (!blockTouchSens.isPressed() && !linearOpMode.isStopRequested())
+        {
             linearOpMode.sleep(50);
-            linearOpMode.telemetry.addData("distanceFromWall: ", usingDistSensor.getDistance(DistanceUnit.INCH));
-            linearOpMode.telemetry.addData("Required Distance: ", requiredDist_in);
-            systemAccess.telemetry.addData("Hi: ", "hello");
-            systemAccess.telemetry.update();
         }
         stopDriveMotors();
     }

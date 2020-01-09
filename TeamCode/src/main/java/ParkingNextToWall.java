@@ -1,7 +1,8 @@
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name = "ParkNextToWall")
+@Disabled()
 public class ParkingNextToWall extends LinearOpMode
 {
     private MecBot holo;

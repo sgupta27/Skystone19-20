@@ -15,11 +15,13 @@ public class AutoBlueBuild_V1 extends LinearOpMode
 
         //on blue build side, robot facing the platforms with the black lines lined up to the ref side
         //edge of the second square from the ref side
+        //THIS MISSION IS WORKING, TWEAKS PROBABLY DO NOT NEED TO BE MADE!!!!!!!!!!!!!!!!!!!!
         holo.driveStrafe_Inches(-12,.8, this);
-        holo.driveStraight_Inches(32, .8, this);
+        holo.driveStraight_Inches(26, .8, this); // Changed this line and the line below. We split the drive straight into 2 parts. The second part is slower to make sure we don't bump the platform
+        holo.driveStraight_Inches(7,0.5,this);
         holo.platformGrab();
         sleep(700);
-        holo.driveStraight_Inches(-31, .8, this);
+        holo.driveStraight_Inches(-33, .4, this);
         holo.platformRelease();
         holo.driveStrafe_Inches(28, .8, this);
         holo.driveStraight_Inches(21, .8, this);
@@ -27,6 +29,7 @@ public class AutoBlueBuild_V1 extends LinearOpMode
         holo.driveStrafe_Inches(6,.8, this);
         holo.driveStraight_Inches(-18,.8, this);
         holo.driveStrafe_Inches(20,.8, this);
+        holo.driveStraight_Inches(-4,.8,this);
         while (opModeIsActive() && !isStopRequested())
         {
             holo.stopDriveMotors();

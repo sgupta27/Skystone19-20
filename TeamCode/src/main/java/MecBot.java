@@ -589,7 +589,7 @@ public class MecBot
             holonomic(pow,0,0,1);
         }
 
-        float encoders_count = (float) (47.1804 * Math.abs(angle_deg) + 20.474); //6.57x - 12.24    7.339x+8.147
+        float encoders_count = (float) (20.474 * Math.abs(angle_deg) + 47.1804); //6.57x - 12.24    7.339x+8.147
 
         while (linearOpMode.opModeIsActive() && Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
         {

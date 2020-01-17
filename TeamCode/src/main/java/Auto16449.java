@@ -1,8 +1,9 @@
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name = "Auto16449")
+@Disabled()
 public class Auto16449 extends LinearOpMode
 {
     private MecBot holo;

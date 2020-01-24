@@ -92,6 +92,8 @@ public class MecTeleController extends OpMode
         //The entire arm pivot controls or shoulder controls
         double shoulderPower_PCT = gamepad2.right_stick_y;
         double shoulderPosition_ENC = holo.getShoulderPosition();
+        telemetry.addData("Enc Shoulder Pos: ", shoulderPosition_ENC);
+        telemetry.addData("Enc extender Pos: ", holo.getArmPosition());
         if (Math.abs(shoulderPower_PCT) > 0.05)
         {
             if (shoulderPower_PCT < 0.0f)

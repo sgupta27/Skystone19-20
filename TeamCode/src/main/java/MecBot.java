@@ -647,6 +647,7 @@ public class MecBot
     {
         return shoulderMotor.getCurrentPosition();
     }
+    public double getArmPosition() {return armMotor.getCurrentPosition();}
     public void platformGrab()
     {
         leftGrabServo.setPosition(0.6);

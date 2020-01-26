@@ -544,31 +544,37 @@ public class MecBot
     }
     public void driveStrafe_Inches(float dist_in, double pow, LinearOpMode linearOpMode)
     {
-        resetDriveEncoders();
 
-        if (dist_in < 0) //left
-        {
-            holonomic(0,pow,0,1);
-//            driveRightFront.setPower(.8);
-//            driveRightBack.setPower(-.8);
-//            driveLeftFront.setPower(-.8);
-//            driveLeftBack.setPower(.8);
+        float dist_togo_in = dist_in;
 
-        } else //right
-        {
-            holonomic(0,-pow,0,1);
-//            driveRightFront.setPower(-.8);
-//            driveRightBack.setPower(.8);
-//            driveLeftFront.setPower(.8);
-//            driveLeftBack.setPower(-.8);
+        while (Math.abs(dist_in)> 0) {
+            if (Math.abs(dist_in) < 24) {
+                dist_togo_in = dist_in;
+                dist_in = 0.0f;
+            } else if (dist_in > 0) {
+                dist_togo_in = 20;
+                dist_in -= 20;
+            } else {
+                dist_togo_in = -20;
+                dist_in += 20;
+            }
+
+            resetDriveEncoders();
+            if (dist_togo_in < 0) //left
+            {
+                holonomic(0, pow, 0, 1);
+
+            } else //right
+            {
+                holonomic(0, -pow, 0, 1);
+            }
+            float encoders_count = (float) (99.32 * Math.abs(dist_togo_in) - 36.94); //corehex comp:24.83x - 7.55     CoreHex practice:32.74x - 14.72
+
+            while (linearOpMode.opModeIsActive() && Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count) {
+
+            }
+            stopDriveMotors();
         }
-        float encoders_count = (float) (99.32*Math.abs(dist_in) - 36.94); //24.83x - 7.55     32.74x - 14.72
-
-        while (linearOpMode.opModeIsActive() && Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
-        {
-
-        }
-        stopDriveMotors();
     }
     public void drivePivot_Degrees(float angle_deg, double pow, LinearOpMode linearOpMode)
     {
@@ -583,7 +589,7 @@ public class MecBot
             holonomic(pow,0,0,1);
         }
 
-        float encoders_count = (float) (47.1804 * Math.abs(angle_deg) + 20.474); //6.57x - 12.24    7.339x+8.147
+        float encoders_count = (float) (20.474 * Math.abs(angle_deg) + 47.1804); //6.57x - 12.24    7.339x+8.147
 
         while (linearOpMode.opModeIsActive() && Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
         {
@@ -641,6 +647,7 @@ public class MecBot
     {
         return shoulderMotor.getCurrentPosition();
     }
+    public double getArmPosition() {return armMotor.getCurrentPosition();}
     public void platformGrab()
     {
         leftGrabServo.setPosition(0.6);

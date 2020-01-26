@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-@TeleOp()
+@Disabled()
 public class MecBotCalibration extends LinearOpMode
 {
     MecBot mecBot;

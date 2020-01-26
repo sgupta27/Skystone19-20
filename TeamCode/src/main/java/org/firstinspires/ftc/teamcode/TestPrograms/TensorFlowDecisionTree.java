@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.VuforiaFunctions;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "TensorFlowDecisionTree")
+@Disabled()
 public class TensorFlowDecisionTree extends LinearOpMode
 {
     @Override

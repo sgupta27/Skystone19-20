@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Disabled()
-public class Auto16449 extends LinearOpMode
+public class AutoSigma extends LinearOpMode
 {
     private MecBot holo;
 
@@ -15,11 +15,7 @@ public class Auto16449 extends LinearOpMode
         holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.SKY_BLUE);
         waitForStart();
 
-        holo.driveStrafe_Inches(-40, .8, this);
-        float requiredDist_in = 4.5f;
-        float intervalDistance = 7; //What is this supposed to do?
-        holo.kissWall(requiredDist_in, intervalDistance, this);
-        holo.driveStraight_Inches(3, .8, this);
+        holo.driveStraight_Inches(40, .8, this);
         while (opModeIsActive() && !isStopRequested())
         {
             holo.stopDriveMotors();

@@ -877,12 +877,21 @@ public class MecBot
         double straightDistanceTraveled = 0;
         float stepDistance = 10;
         float stepPivotAmtDeg = 15;
+        float initialEncoderCount = driveRightFront.getCurrentPosition();
+        float currentEncoderCount = 0;
 
+        wristServo.setPosition(0.35); //drops wrist before goes forward to avoid the plate from hitting the blocks when trying to pick up the blocks
+        linearOpMode.sleep(600);
         DistanceSensor usingDistSensor = frontDistSens;
         holonomic(0,0,.2, 1);
         while (usingDistSensor.getDistance(DistanceUnit.INCH) > requiredDist_in && !linearOpMode.isStopRequested())
         {
               linearOpMode.sleep(50);
+              currentEncoderCount = driveRightFront.getCurrentPosition();
+              if (initialEncoderCount + 700 < currentEncoderCount)
+              {
+                  break;
+              }
          //   linearOpMode.telemetry.addData("distanceFromWall: ", usingDistSensor.getDistance(DistanceUnit.INCH));
          //   linearOpMode.telemetry.addData("Required Distance: ", requiredDist_in);
          //   linearOpMode.telemetry.update();

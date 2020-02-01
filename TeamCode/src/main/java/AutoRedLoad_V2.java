@@ -54,8 +54,8 @@ public class AutoRedLoad_V2 extends LinearOpMode
         holo.kissWall(requiredDist_in, intervalDistance, this);
         holo.grabStone(this);
         holo.driveStraight_Inches(-5,.8, this);
-        holo.drivePivot_Degrees(-85,.9, this);
-        holo.driveStrafe_Inches(-5,.9,this);
+        holo.drivePivot_Degrees(-90,.9, this);
+        holo.driveStrafe_Inches(-3,.9,this);
         holo.driveStraight_Inches(totalStrafeDist_In - 23, .9, this);
         holo.driveStraight_Inches(-15,.9, this);
         while (opModeIsActive() && !isStopRequested())

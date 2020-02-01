@@ -19,10 +19,10 @@ public class AutoBlueLoad_V2 extends LinearOpMode
 
         holo.driveStraight_Inches(26, .8, this);
         sleep(100);
-        holo.driveStrafe_Inches(5,.5, this);
+        holo.driveStrafe_Inches(6,.5, this);
         char colorSkystone = holo.getColor();
         int testNumber = 1;
-        float totalStrafeDist_In = -60;
+        float totalStrafeDist_In = -61;
         boolean isFirstBlock = true;
         telemetry.addData("stone color = ", colorSkystone);
         telemetry.update();
@@ -57,8 +57,8 @@ public class AutoBlueLoad_V2 extends LinearOpMode
         holo.kissWall(requiredDist_in, intervalDistance, this);
         holo.grabStone(this);
         holo.driveStraight_Inches(-6,.8, this);
-        holo.drivePivot_Degrees(85,.9, this);
-        holo.driveStrafe_Inches(5,.9, this);
+        holo.drivePivot_Degrees(85,.8, this);
+        holo.driveStrafe_Inches(4,.9, this);
         holo.driveStraight_Inches(-(totalStrafeDist_In + 22), .9, this);
         holo.driveStraight_Inches(-15,.9,this);
         while (opModeIsActive() && !isStopRequested())

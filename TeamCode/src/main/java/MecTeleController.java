@@ -85,7 +85,7 @@ public class MecTeleController extends OpMode
             Turn *= 0.5f;
         }
         holo.holonomic(Turn, Strafe, Forward, MAX_SPEED);
-        
+
         if (runTime > 90) //Shows us when 30 seconds are left
         {
             holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);

@@ -42,11 +42,19 @@ public class MecBot
         private float wheelCircIn = 4 * (float) Math.PI; //Circumference of wheels used
         private float wheelCircCm = (float) (9.8 * Math.PI);
         private ElapsedTime runtime = new ElapsedTime();
+        private int extTargetPos;
+        private int sholderTargetPos;
+        private short currentLvl = 0;
+        private MecBot.directions direction = directions.Stop;
         public ColorSensor getFrontColorSens;
 
     enum Result
     {
         Left, Right, Moved;
+    }
+    enum directions
+    {
+        Up, Down, Stop
     }
 
     public MecBot(HardwareMap hMap, OpMode systemAccessIN)
@@ -596,6 +604,78 @@ public class MecBot
 
         }
         stopDriveMotors();
+    }
+    public void calcTarget (int adjLevels)
+    {
+        final int extLevels[] = {0, -175, -274, -375, -463, -540, -613, -647};
+        final int sholderLevels[] = {0, -140, -140, -203, -276, -414, -676, -900};
+
+        if (adjLevels + currentLvl < 0)
+        {
+            currentLvl = 0;
+        }
+        else if (adjLevels + currentLvl >= extLevels.length)
+        {
+            currentLvl = (short) (extLevels.length - 1);
+        }
+        else
+        {
+            currentLvl += adjLevels;
+        }
+        //Calculate target
+        extTargetPos = (short) (extLevels[currentLvl]);
+        sholderTargetPos = (short) (sholderLevels[currentLvl]);
+        if (adjLevels > 0)
+        {
+            direction = directions.Down;
+        }
+        else
+        {
+            direction = directions.Up;
+        }
+    }
+    public void AdjDir()
+    {
+        if (direction == directions.Up)
+        {
+            if (getShoulderPosition() < sholderTargetPos)
+            {
+                setShoulderPower(.7);
+            }
+            if (getArmPosition() < sholderTargetPos)
+            {
+                setArmPower(.7);
+            }
+            else
+            {
+                if (!(getShoulderPosition() < sholderTargetPos))
+                {
+                    direction = directions.Stop;
+                }
+            }
+        }
+        else if (direction == directions.Down)
+        {
+            if (getShoulderPosition() > sholderTargetPos)
+            {
+                setShoulderPower(-.7);
+            }
+            if (getArmPosition() > sholderTargetPos)
+            {
+                setArmPower(-.7);
+            }
+            else
+            {
+                if (!(getShoulderPosition() > sholderTargetPos))
+                {
+                    direction = directions.Stop;
+                }
+            }
+        }
+        if (getShoulderPosition() > sholderTargetPos)
+        {
+            setShoulderPower(.7);
+        }
     }
     public void wristDown (LinearOpMode linearOpMode)
     {

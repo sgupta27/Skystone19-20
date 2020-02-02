@@ -12,6 +12,7 @@ public class MecTeleController_V2 extends OpMode
     private double wristPosition = 0.0;
     private boolean grabberDeployed = false;
     private boolean grabberBTNReleased = true;
+    private boolean indexingBTNReleased = true;
     private boolean wristFollow = false;
     private double lastShoulderPosition = 0;
 
@@ -87,15 +88,27 @@ public class MecTeleController_V2 extends OpMode
         }
         //Attachment controls (controller 2)
         //arm pivot/shoulder action, in and out action, wrist action, close/open action
-        if (gamepad2.dpad_up)
+        if (gamepad2.b)
         {
-            telemetry.addData("In calclift 1", null);
-            holo.calcTarget(1);
+            if (indexingBTNReleased)
+            {
+                telemetry.addData("In calclift 1", null);
+                holo.calcTarget(1);
+                indexingBTNReleased = false;
+            }
         }
-        else if (gamepad2.dpad_down)
+        else if (gamepad2.x)
         {
-            telemetry.addData("In calclift -1", null);
-            holo.calcTarget(-1);
+            if (indexingBTNReleased)
+            {
+                telemetry.addData("In calclift -1", null);
+                holo.calcTarget(-1);
+                indexingBTNReleased = false;
+            }
+        }
+        else
+        {
+            indexingBTNReleased = true;
         }
         double armPower = gamepad2.left_stick_y;
         holo.setArmPower(armPower);

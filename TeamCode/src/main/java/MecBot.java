@@ -656,11 +656,11 @@ public class MecBot
         }
         else if (direction == directions.Down)
         {
-            if (getShoulderPosition() > sholderTargetPos)
+            if (getShoulderPosition() > extTargetPos)
             {
                 setShoulderPower(-.7);
             }
-            if (getArmPosition() > sholderTargetPos)
+            if (getArmPosition() > extTargetPos)
             {
                 setArmPower(-.7);
             }
@@ -671,10 +671,6 @@ public class MecBot
                     direction = directions.Stop;
                 }
             }
-        }
-        if (getShoulderPosition() > sholderTargetPos)
-        {
-            setShoulderPower(.7);
         }
     }
     public void wristDown (LinearOpMode linearOpMode)

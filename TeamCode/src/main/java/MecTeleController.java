@@ -70,12 +70,22 @@ public class MecTeleController extends OpMode
         //double RightY = gamepad1.right_stick_y;
         double MAX_SPEED = 1;
         double runTime = holo.getRunTime();
+        boolean stealthMode = false;
+        boolean triggerHeld = false;
+        double speedFactor = .5;
         telemetry.addData("Forward: ", Forward); //Removed for testing
         telemetry.addData("Strafe: ", Strafe);
         telemetry.addData("Turn: ", Turn);
         //telemetry.addData("Right Y: ", RightY);
         telemetry.addData("MAX_SPEED: ", MAX_SPEED);
+        if(gamepad1.right_trigger > 0.2f)
+        {
+            Forward *= 0.5f;
+            Strafe *= 0.5f;
+            Turn *= 0.5f;
+        }
         holo.holonomic(Turn, Strafe, Forward, MAX_SPEED);
+
         if (runTime > 90) //Shows us when 30 seconds are left
         {
             holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);

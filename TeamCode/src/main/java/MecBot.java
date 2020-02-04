@@ -609,22 +609,18 @@ public class MecBot
     {
         final int extLevels[] = {0, -175, -274, -375, -463, -540, -613, -647};
         final int sholderLevels[] = {0, -140, -140, -203, -276, -414, -676, -900};
-
-        if (adjLevels + currentLvl < 0)
+        currentLvl += adjLevels;
+        if (currentLvl < 0)
         {
             currentLvl = 0;
         }
-        else if (adjLevels + currentLvl >= extLevels.length)
+        else if (currentLvl >= extLevels.length)
         {
             currentLvl = (short) (extLevels.length - 1);
         }
-        else
-        {
-            currentLvl += adjLevels;
-        }
         //Calculate target
-        extTargetPos = (short) (extLevels[currentLvl]);
-        sholderTargetPos = (short) (sholderLevels[currentLvl]);
+        extTargetPos = (extLevels[currentLvl]);
+        sholderTargetPos = (sholderLevels[currentLvl]);
         if (adjLevels > 0)
         {
             direction = directions.Down;
@@ -640,11 +636,11 @@ public class MecBot
         {
             if (getShoulderPosition() < sholderTargetPos)
             {
-                setShoulderPower(.7);
+                setShoulderPower(-.05);
             }
             if (getArmPosition() < sholderTargetPos)
             {
-                setArmPower(.7);
+                setArmPower(.6);
             }
             else
             {
@@ -658,11 +654,11 @@ public class MecBot
         {
             if (getShoulderPosition() > extTargetPos)
             {
-                setShoulderPower(-.7);
+                setShoulderPower(-.3);
             }
             if (getArmPosition() > extTargetPos)
             {
-                setArmPower(-.7);
+                setArmPower(-.6);
             }
             else
             {

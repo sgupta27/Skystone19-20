@@ -1,8 +1,9 @@
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
-@TeleOp(name = "MecTeleController_V2")
+@Disabled//(name = "MecTeleController_V2")
 public class MecTeleController_V2 extends OpMode
 {
     private MecBot holo;
@@ -144,9 +145,9 @@ public class MecTeleController_V2 extends OpMode
             {
                 telemetry.addData("not moving either, adj dir", null);
                 holo.AdjDir();
+                wristFollow = true;
+                lastShoulderPosition = shoulderPosition_ENC;
             }
-            wristFollow = true;
-            lastShoulderPosition = shoulderPosition_ENC;
         }
         //  telemetry.addData("shoulder position = ", holo.getShoulderPosition());
         //   telemetry.addData("last shoulder position = ", lastShoulderPosition);

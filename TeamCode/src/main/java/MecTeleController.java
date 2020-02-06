@@ -118,7 +118,9 @@ public class MecTeleController extends OpMode
             holo.setShoulderPower(shoulderPower_PCT); //play with the denominator if needed to slow down
             if (shoulderPower_PCT > 0){
                 wristPosition = Math.abs(shoulderPosition_ENC) * 0.0005887 + 0.4294;
-            }else{
+            }
+            else
+            {
                 wristPosition = Math.abs(shoulderPosition_ENC) * 0.0005158 + 0.3875;
             }
             //wristPosition = Math.abs(shoulderPosition_ENC) * 0.000511 + 0.3986;

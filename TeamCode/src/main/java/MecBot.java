@@ -43,9 +43,10 @@ public class MecBot
         private float wheelCircCm = (float) (9.8 * Math.PI);
         private ElapsedTime runtime = new ElapsedTime();
         private int extTargetPos;
-        private int sholderTargetPos;
+        private int shoulderTargetPos;
         private short currentLvl = 0;
-        private MecBot.directions direction = directions.Stop;
+        private MecBot.directions extDirection = directions.Stop;
+        private MecBot.directions shoulderDirection = directions.Stop;
         public ColorSensor getFrontColorSens;
 
     enum Result
@@ -607,8 +608,12 @@ public class MecBot
     }
     public void calcTarget (int adjLevels)
     {
+        double extPos = getArmPosition();
+        double shoulderPos = getShoulderPosition();
+        int extCloseEnough = 5;
+        int shoulderCloseEnough = 5;
         final int extLevels[] = {0, -175, -274, -375, -463, -540, -613, -647};
-        final int sholderLevels[] = {0, -140, -140, -203, -276, -414, -676, -900};
+        final int shoulderLevels[] = {0, -140, -140, -203, -276, -414, -676, -900};
         currentLvl += adjLevels;
         if (currentLvl < 0)
         {
@@ -620,55 +625,113 @@ public class MecBot
         }
         //Calculate target
         extTargetPos = (extLevels[currentLvl]);
-        sholderTargetPos = (sholderLevels[currentLvl]);
-        if (adjLevels > 0)
+        shoulderTargetPos = (shoulderLevels[currentLvl]);
+        if (shoulderPos > shoulderTargetPos+shoulderCloseEnough)
         {
-            direction = directions.Down;
+            shoulderDirection = directions.Up;
+        }
+        else if (shoulderPos < shoulderTargetPos-shoulderCloseEnough)
+        {
+            shoulderDirection = directions.Down;
         }
         else
         {
-            direction = directions.Up;
+            shoulderDirection = directions.Stop;
+        }
+
+        if (extPos > extTargetPos+extCloseEnough)
+        {
+            extDirection = directions.Up;
+        }
+        else if (extPos < extTargetPos-extCloseEnough)
+        {
+            extDirection = directions.Down;
+        }
+        else
+        {
+            extDirection = directions.Stop;
         }
     }
-    public void AdjDir()
+    public boolean AdjDir()
     {
-        if (direction == directions.Up)
+        double extPos = getArmPosition();
+        double shoulderPos = getShoulderPosition();
+        int extCloseEnough = 5;
+        int shoulderCloseEnough = 5;
+        boolean shoulderMoved = false;
+        if (shoulderDirection == directions.Up)
         {
-            if (getShoulderPosition() < sholderTargetPos)
+            if (shoulderPos > shoulderTargetPos+shoulderCloseEnough)
             {
-                setShoulderPower(-.05);
+                setShoulderPower(-.3);
+                shoulderMoved = true;
             }
-            if (getArmPosition() < sholderTargetPos)
+            else
+            {
+                shoulderDirection = directions.Stop;
+            }
+            /*if (getArmPosition() < extTargetPos)
             {
                 setArmPower(.6);
             }
             else
             {
-                if (!(getShoulderPosition() < sholderTargetPos))
+                if (!(getShoulderPosition() < shoulderTargetPos))
                 {
                     direction = directions.Stop;
                 }
-            }
+            }*/
         }
-        else if (direction == directions.Down)
+        else if (shoulderDirection == directions.Down)
         {
-            if (getShoulderPosition() > extTargetPos)
+            if (shoulderPos < shoulderTargetPos-shoulderCloseEnough)
             {
-                setShoulderPower(-.3);
+                setShoulderPower(-.05);
+                shoulderMoved = true;
             }
-            if (getArmPosition() > extTargetPos)
+            else
+            {
+                shoulderDirection = directions.Stop;
+            }
+            /*if (getArmPosition() > extTargetPos)
             {
                 setArmPower(-.6);
             }
             else
             {
-                if (!(getShoulderPosition() > sholderTargetPos))
+                if (!(getShoulderPosition() > shoulderTargetPos))
                 {
                     direction = directions.Stop;
                 }
+            }*/
+        }
+
+        if (extDirection == directions.Up) {
+            if (extPos > extTargetPos+extCloseEnough) {
+                setArmPower(-.6);
+            } else {
+                extDirection = directions.Stop;
             }
         }
+        else if (extDirection == directions.Down) {
+            if (extPos < extTargetPos-extCloseEnough) {
+                setArmPower(.6);
+            } else {
+                extDirection = directions.Stop;
+            }
+        }
+        return shoulderMoved;
     }
+    public boolean isIndexing()
+    {
+        boolean indexing = true;
+        if (shoulderDirection == directions.Stop && extDirection == directions.Stop)
+        {
+            indexing = false;
+        }
+        return indexing;
+    }
+
     public void wristDown (LinearOpMode linearOpMode)
     {
         wristServo.setPosition(0.4);

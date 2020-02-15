@@ -612,8 +612,8 @@ public class MecBot
         double shoulderPos = getShoulderPosition();
         int extCloseEnough = 5;
         int shoulderCloseEnough = 5;
-        final int extLevels[] = {0, -175, -274, -375, -463, -540, -613, -647};
-        final int shoulderLevels[] = {0, -140, -140, -203, -276, -414, -676, -900};
+        final int shoulderLevels[] = {0, -175, -274, -375, -463, -540, -613, -647};
+        final int extLevels[] = {0, -140, -140, -203, -276, -414, -676, -900};
         currentLvl += adjLevels;
         if (currentLvl < 0)
         {
@@ -686,7 +686,7 @@ public class MecBot
         {
             if (shoulderPos < shoulderTargetPos-shoulderCloseEnough)
             {
-                setShoulderPower(-.05);
+                setShoulderPower(.1);
                 shoulderMoved = true;
             }
             else
@@ -708,14 +708,14 @@ public class MecBot
 
         if (extDirection == directions.Up) {
             if (extPos > extTargetPos+extCloseEnough) {
-                setArmPower(-.6);
+                setArmPower(-.8);
             } else {
                 extDirection = directions.Stop;
             }
         }
         else if (extDirection == directions.Down) {
             if (extPos < extTargetPos-extCloseEnough) {
-                setArmPower(.6);
+                setArmPower(.8);
             } else {
                 extDirection = directions.Stop;
             }

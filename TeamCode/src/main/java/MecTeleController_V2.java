@@ -3,7 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
-@Disabled//(name = "MecTeleController_V2")
+@TeleOp (name = "MecTeleController_V2")
 public class MecTeleController_V2 extends OpMode
 {
     private MecBot holo;
@@ -79,6 +79,12 @@ public class MecTeleController_V2 extends OpMode
         telemetry.addData("Turn: ", Turn);
         //telemetry.addData("Right Y: ", RightY);
         telemetry.addData("MAX_SPEED: ", MAX_SPEED);
+        if(gamepad1.right_trigger > 0.2f)
+        {
+            Forward *= 0.5f;
+            Strafe *= 0.5f;
+            Turn *= 0.5f;
+        }
         holo.holonomic(Turn, Strafe, Forward, MAX_SPEED);
         if (runTime > 90) //Shows us when 30 seconds are left
         {
@@ -138,11 +144,14 @@ public class MecTeleController_V2 extends OpMode
         }
         else
         {
-            if (holo.isIndexing()) {
-                if (armPower == 0) {
+            if (holo.isIndexing())
+            {
+                if (armPower == 0)
+                {
                     telemetry.addData("not moving either, adj dir", null);
                     shoulderMoved = holo.AdjDir();
-                    if (shoulderMoved) {
+                    if (shoulderMoved)
+                    {
                         wristFollow = true;
                         lastShoulderPosition = shoulderPosition_ENC;
                     }
@@ -158,14 +167,17 @@ public class MecTeleController_V2 extends OpMode
         if (gamepad2.y)
         {
             wristPosition = 0;
+            wristFollow = false;
         }
         else if (gamepad2.right_bumper) //wrist code from last year
         {
             wristPosition -= .0038;
+            wristFollow = false;
         }
         else if (gamepad2.right_trigger > .2f)
         {
             wristPosition += .0038;
+            wristFollow = false;
         }
         if (wristFollow)
         {

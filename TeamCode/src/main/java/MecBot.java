@@ -663,7 +663,7 @@ public class MecBot
         {
             if (shoulderPos > shoulderTargetPos+shoulderCloseEnough)
             {
-                setShoulderPower(-.3);
+                setShoulderPower(-.4);
                 shoulderMoved = true;
             }
             else
@@ -686,7 +686,7 @@ public class MecBot
         {
             if (shoulderPos < shoulderTargetPos-shoulderCloseEnough)
             {
-                setShoulderPower(.1);
+                setShoulderPower(-.05);
                 shoulderMoved = true;
             }
             else
@@ -706,25 +706,40 @@ public class MecBot
             }*/
         }
 
-        if (extDirection == directions.Up) {
-            if (extPos > extTargetPos+extCloseEnough) {
+        if (extDirection == directions.Up)
+        {
+            if (extPos > extTargetPos+extCloseEnough)
+            {
                 setArmPower(-.8);
-            } else {
+            } else
+            {
                 extDirection = directions.Stop;
             }
         }
-        else if (extDirection == directions.Down) {
-            if (extPos < extTargetPos-extCloseEnough) {
+        else if (extDirection == directions.Down)
+        {
+            if (extPos < extTargetPos-extCloseEnough)
+            {
                 setArmPower(.8);
-            } else {
+            } else
+            {
                 extDirection = directions.Stop;
             }
         }
         return shoulderMoved;
     }
-    public boolean isIndexing()
+    public boolean isIndexing(Telemetry telemetry)
     {
         boolean indexing = true;
+        telemetry.addLine("shoulder:");
+        telemetry.addData("p: ", getShoulderPosition());
+        telemetry.addData("t: ", shoulderTargetPos);
+        telemetry.addData("d: ", shoulderDirection);
+        telemetry.addLine("arm");
+        telemetry.addData("p: ", getArmPosition());
+        telemetry.addData("t: ", extTargetPos);
+        telemetry.addData("d: ", extDirection);
+        telemetry.update();
         if (shoulderDirection == directions.Stop && extDirection == directions.Stop)
         {
             indexing = false;

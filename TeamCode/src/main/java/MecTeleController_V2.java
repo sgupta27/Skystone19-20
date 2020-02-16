@@ -1,4 +1,5 @@
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -124,8 +125,8 @@ public class MecTeleController_V2 extends OpMode
         //The entire arm pivot controls or shoulder controls
         double shoulderPower_PCT = gamepad2.right_stick_y;
         double shoulderPosition_ENC = holo.getShoulderPosition();
-        telemetry.addData("Enc Shoulder Pos: ", shoulderPosition_ENC);
-        telemetry.addData("Enc extender Pos: ", holo.getArmPosition());
+        // telemetry.addData("Enc Shoulder Pos: ", shoulderPosition_ENC);
+        // telemetry.addData("Enc extender Pos: ", holo.getArmPosition());
         if (Math.abs(shoulderPower_PCT) > 0.05)
         {
             if (shoulderPower_PCT < 0.0f)
@@ -144,7 +145,7 @@ public class MecTeleController_V2 extends OpMode
         }
         else
         {
-            if (holo.isIndexing())
+            if (holo.isIndexing(telemetry))
             {
                 if (armPower == 0)
                 {
@@ -160,6 +161,10 @@ public class MecTeleController_V2 extends OpMode
             else if(shoulderPosition_ENC > lastShoulderPosition)
             {
                 holo.setShoulderPower(-0.24);
+            }
+            else
+            {
+                holo.setShoulderPower(0);
             }
         }
         //  telemetry.addData("shoulder position = ", holo.getShoulderPosition());

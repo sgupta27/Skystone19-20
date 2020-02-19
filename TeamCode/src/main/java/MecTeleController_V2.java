@@ -1,9 +1,11 @@
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
-@TeleOp(name = "MecTeleController")
-public class MecTeleController extends OpMode
+@TeleOp (name = "MecTeleController_V2")
+public class MecTeleController_V2 extends OpMode
 {
     private MecBot holo;
     private float rValue, lValue;
@@ -12,6 +14,9 @@ public class MecTeleController extends OpMode
     private double wristPosition = 0.0;
     private boolean grabberDeployed = false;
     private boolean grabberBTNReleased = true;
+    private boolean indexingBTNReleased = true;
+    private boolean wristFollow = false;
+    private boolean shoulderMoved;
     private double lastShoulderPosition = 0;
 
     public void init()
@@ -70,9 +75,6 @@ public class MecTeleController extends OpMode
         //double RightY = gamepad1.right_stick_y;
         double MAX_SPEED = 1;
         double runTime = holo.getRunTime();
-        boolean stealthMode = false;
-        boolean triggerHeld = false;
-        double speedFactor = .5;
         telemetry.addData("Forward: ", Forward); //Removed for testing
         telemetry.addData("Strafe: ", Strafe);
         telemetry.addData("Turn: ", Turn);
@@ -85,7 +87,6 @@ public class MecTeleController extends OpMode
             Turn *= 0.5f;
         }
         holo.holonomic(Turn, Strafe, Forward, MAX_SPEED);
-
         if (runTime > 90) //Shows us when 30 seconds are left
         {
             holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);
@@ -96,14 +97,36 @@ public class MecTeleController extends OpMode
         }
         //Attachment controls (controller 2)
         //arm pivot/shoulder action, in and out action, wrist action, close/open action
+        if (gamepad2.b)
+        {
+            if (indexingBTNReleased)
+            {
+                telemetry.addData("In calclift 1", null);
+                holo.calcTarget(1);
+                indexingBTNReleased = false;
+            }
+        }
+        else if (gamepad2.x)
+        {
+            if (indexingBTNReleased)
+            {
+                telemetry.addData("In calclift -1", null);
+                holo.calcTarget(-1);
+                indexingBTNReleased = false;
+            }
+        }
+        else
+        {
+            indexingBTNReleased = true;
+        }
         double armPower = gamepad2.left_stick_y;
         holo.setArmPower(armPower);
 
         //The entire arm pivot controls or shoulder controls
         double shoulderPower_PCT = gamepad2.right_stick_y;
         double shoulderPosition_ENC = holo.getShoulderPosition();
-        telemetry.addData("Enc Shoulder Pos: ", shoulderPosition_ENC);
-        telemetry.addData("Enc extender Pos: ", holo.getArmPosition());
+        // telemetry.addData("Enc Shoulder Pos: ", shoulderPosition_ENC);
+        // telemetry.addData("Enc extender Pos: ", holo.getArmPosition());
         if (Math.abs(shoulderPower_PCT) > 0.05)
         {
             if (shoulderPower_PCT < 0.0f)
@@ -116,37 +139,61 @@ public class MecTeleController extends OpMode
             }
             shoulderPower_PCT += -0.1;//small up to account for gravity
             holo.setShoulderPower(shoulderPower_PCT); //play with the denominator if needed to slow down
-            if (shoulderPower_PCT > 0){
+            wristFollow = true;
+            //wristPosition = Math.abs(shoulderPosition_ENC) * 0.000511 + 0.3986;
+            lastShoulderPosition = shoulderPosition_ENC;
+        }
+        else
+        {
+            if (holo.isIndexing(telemetry))
+            {
+                if (armPower == 0)
+                {
+                    telemetry.addData("not moving either, adj dir", null);
+                    shoulderMoved = holo.AdjDir();
+                    if (shoulderMoved)
+                    {
+                        wristFollow = true;
+                        lastShoulderPosition = shoulderPosition_ENC;
+                    }
+                }
+            }
+            else if(shoulderPosition_ENC > lastShoulderPosition)
+            {
+                holo.setShoulderPower(-0.24);
+            }
+            else
+            {
+                holo.setShoulderPower(0);
+            }
+        }
+        //  telemetry.addData("shoulder position = ", holo.getShoulderPosition());
+        //   telemetry.addData("last shoulder position = ", lastShoulderPosition);
+        if (gamepad2.y)
+        {
+            wristPosition = 0;
+            wristFollow = false;
+        }
+        else if (gamepad2.right_bumper) //wrist code from last year
+        {
+            wristPosition -= .0038;
+            wristFollow = false;
+        }
+        else if (gamepad2.right_trigger > .2f)
+        {
+            wristPosition += .0038;
+            wristFollow = false;
+        }
+        if (wristFollow)
+        {
+            if (shoulderPower_PCT > 0)
+            {
                 wristPosition = Math.abs(shoulderPosition_ENC) * 0.0005887 + 0.4294;
             }
             else
             {
                 wristPosition = Math.abs(shoulderPosition_ENC) * 0.0005158 + 0.3875;
             }
-            //wristPosition = Math.abs(shoulderPosition_ENC) * 0.000511 + 0.3986;
-            lastShoulderPosition = shoulderPosition_ENC;
-        }
-        else if(shoulderPosition_ENC > lastShoulderPosition)
-        {
-            holo.setShoulderPower(-0.24);
-        }
-        else
-        {
-            holo.setShoulderPower(0.0);
-        }
-      //  telemetry.addData("shoulder position = ", holo.getShoulderPosition());
-     //   telemetry.addData("last shoulder position = ", lastShoulderPosition);
-        if (gamepad2.y)
-        {
-            wristPosition = 0;
-        }
-        else if (gamepad2.right_bumper) //wrist code from last year
-        {
-            wristPosition -= .0038;
-        }
-        else if (gamepad2.right_trigger > .2f)
-        {
-            wristPosition += .0038;
         }
         wristPosition = holo.setWristPosition(wristPosition);
         //gamepad 1 button a will toggle platform grabbers
@@ -172,7 +219,7 @@ public class MecTeleController extends OpMode
         }
         // Arm clamp Controls
 
-       if (gamepad2.left_bumper)
+        if (gamepad2.left_bumper)
         {
             holo.clamp(false);
         }

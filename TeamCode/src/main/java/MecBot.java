@@ -42,11 +42,20 @@ public class MecBot
         private float wheelCircIn = 4 * (float) Math.PI; //Circumference of wheels used
         private float wheelCircCm = (float) (9.8 * Math.PI);
         private ElapsedTime runtime = new ElapsedTime();
+        private int extTargetPos;
+        private int shoulderTargetPos;
+        private short currentLvl = 0;
+        private MecBot.directions extDirection = directions.Stop;
+        private MecBot.directions shoulderDirection = directions.Stop;
         public ColorSensor getFrontColorSens;
 
     enum Result
     {
         Left, Right, Moved;
+    }
+    enum directions
+    {
+        Up, Down, Stop
     }
 
     public MecBot(HardwareMap hMap, OpMode systemAccessIN)
@@ -597,6 +606,147 @@ public class MecBot
         }
         stopDriveMotors();
     }
+    public void calcTarget (int adjLevels)
+    {
+        double extPos = getArmPosition();
+        double shoulderPos = getShoulderPosition();
+        int extCloseEnough = 5;
+        int shoulderCloseEnough = 5;
+        final int shoulderLevels[] = {0, -175, -274, -375, -463, -540, -613, -647};
+        final int extLevels[] = {0, -140, -140, -203, -276, -414, -676, -900};
+        currentLvl += adjLevels;
+        if (currentLvl < 0)
+        {
+            currentLvl = 0;
+        }
+        else if (currentLvl >= extLevels.length)
+        {
+            currentLvl = (short) (extLevels.length - 1);
+        }
+        //Calculate target
+        extTargetPos = (extLevels[currentLvl]);
+        shoulderTargetPos = (shoulderLevels[currentLvl]);
+        if (shoulderPos > shoulderTargetPos+shoulderCloseEnough)
+        {
+            shoulderDirection = directions.Up;
+        }
+        else if (shoulderPos < shoulderTargetPos-shoulderCloseEnough)
+        {
+            shoulderDirection = directions.Down;
+        }
+        else
+        {
+            shoulderDirection = directions.Stop;
+        }
+
+        if (extPos > extTargetPos+extCloseEnough)
+        {
+            extDirection = directions.Up;
+        }
+        else if (extPos < extTargetPos-extCloseEnough)
+        {
+            extDirection = directions.Down;
+        }
+        else
+        {
+            extDirection = directions.Stop;
+        }
+    }
+    public boolean AdjDir()
+    {
+        double extPos = getArmPosition();
+        double shoulderPos = getShoulderPosition();
+        int extCloseEnough = 5;
+        int shoulderCloseEnough = 5;
+        boolean shoulderMoved = false;
+        if (shoulderDirection == directions.Up)
+        {
+            if (shoulderPos > shoulderTargetPos+shoulderCloseEnough)
+            {
+                setShoulderPower(-.4);
+                shoulderMoved = true;
+            }
+            else
+            {
+                shoulderDirection = directions.Stop;
+            }
+            /*if (getArmPosition() < extTargetPos)
+            {
+                setArmPower(.6);
+            }
+            else
+            {
+                if (!(getShoulderPosition() < shoulderTargetPos))
+                {
+                    direction = directions.Stop;
+                }
+            }*/
+        }
+        else if (shoulderDirection == directions.Down)
+        {
+            if (shoulderPos < shoulderTargetPos-shoulderCloseEnough)
+            {
+                setShoulderPower(-.05);
+                shoulderMoved = true;
+            }
+            else
+            {
+                shoulderDirection = directions.Stop;
+            }
+            /*if (getArmPosition() > extTargetPos)
+            {
+                setArmPower(-.6);
+            }
+            else
+            {
+                if (!(getShoulderPosition() > shoulderTargetPos))
+                {
+                    direction = directions.Stop;
+                }
+            }*/
+        }
+
+        if (extDirection == directions.Up)
+        {
+            if (extPos > extTargetPos+extCloseEnough)
+            {
+                setArmPower(-.8);
+            } else
+            {
+                extDirection = directions.Stop;
+            }
+        }
+        else if (extDirection == directions.Down)
+        {
+            if (extPos < extTargetPos-extCloseEnough)
+            {
+                setArmPower(.8);
+            } else
+            {
+                extDirection = directions.Stop;
+            }
+        }
+        return shoulderMoved;
+    }
+    public boolean isIndexing(Telemetry telemetry)
+    {
+        boolean indexing = true;
+        telemetry.addLine("shoulder:");
+        telemetry.addData("p: ", getShoulderPosition());
+        telemetry.addData("t: ", shoulderTargetPos);
+        telemetry.addData("d: ", shoulderDirection);
+        telemetry.addLine("arm");
+        telemetry.addData("p: ", getArmPosition());
+        telemetry.addData("t: ", extTargetPos);
+        telemetry.addData("d: ", extDirection);
+        telemetry.update();
+        if (shoulderDirection == directions.Stop && extDirection == directions.Stop)
+        {
+            indexing = false;
+        }
+        return indexing;
+    }
+
     public void wristDown (LinearOpMode linearOpMode)
     {
         wristServo.setPosition(0.4);
@@ -877,12 +1027,21 @@ public class MecBot
         double straightDistanceTraveled = 0;
         float stepDistance = 10;
         float stepPivotAmtDeg = 15;
+        float initialEncoderCount = driveRightFront.getCurrentPosition();
+        float currentEncoderCount = 0;
 
+        wristServo.setPosition(0.35); //drops wrist before goes forward to avoid the plate from hitting the blocks when trying to pick up the blocks
+        linearOpMode.sleep(600);
         DistanceSensor usingDistSensor = frontDistSens;
         holonomic(0,0,.2, 1);
         while (usingDistSensor.getDistance(DistanceUnit.INCH) > requiredDist_in && !linearOpMode.isStopRequested())
         {
               linearOpMode.sleep(50);
+              currentEncoderCount = driveRightFront.getCurrentPosition();
+              if (initialEncoderCount + 700 < currentEncoderCount)
+              {
+                  break;
+              }
          //   linearOpMode.telemetry.addData("distanceFromWall: ", usingDistSensor.getDistance(DistanceUnit.INCH));
          //   linearOpMode.telemetry.addData("Required Distance: ", requiredDist_in);
          //   linearOpMode.telemetry.update();

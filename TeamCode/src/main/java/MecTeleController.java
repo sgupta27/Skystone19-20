@@ -73,11 +73,6 @@ public class MecTeleController extends OpMode
         boolean stealthMode = false;
         boolean triggerHeld = false;
         double speedFactor = .5;
-        telemetry.addData("Forward: ", Forward); //Removed for testing
-        telemetry.addData("Strafe: ", Strafe);
-        telemetry.addData("Turn: ", Turn);
-        //telemetry.addData("Right Y: ", RightY);
-        telemetry.addData("MAX_SPEED: ", MAX_SPEED);
         if(gamepad1.right_trigger > 0.2f)
         {
             Forward *= 0.5f;
@@ -116,17 +111,17 @@ public class MecTeleController extends OpMode
             }
             shoulderPower_PCT += -0.1;//small up to account for gravity
             holo.setShoulderPower(shoulderPower_PCT); //play with the denominator if needed to slow down
-            if (shoulderPower_PCT > 0){
+            if (shoulderPower_PCT > 0)
+            {
                 wristPosition = Math.abs(shoulderPosition_ENC) * 0.0005887 + 0.4294;
             }
             else
             {
                 wristPosition = Math.abs(shoulderPosition_ENC) * 0.0005158 + 0.3875;
             }
-            //wristPosition = Math.abs(shoulderPosition_ENC) * 0.000511 + 0.3986;
             lastShoulderPosition = shoulderPosition_ENC;
         }
-        else if(shoulderPosition_ENC > lastShoulderPosition)
+        else if (shoulderPosition_ENC > lastShoulderPosition)
         {
             holo.setShoulderPower(-0.24);
         }
@@ -134,13 +129,12 @@ public class MecTeleController extends OpMode
         {
             holo.setShoulderPower(0.0);
         }
-      //  telemetry.addData("shoulder position = ", holo.getShoulderPosition());
-     //   telemetry.addData("last shoulder position = ", lastShoulderPosition);
+
         if (gamepad2.y)
         {
             wristPosition = 0;
         }
-        else if (gamepad2.right_bumper) //wrist code from last year
+        else if (gamepad2.right_bumper)
         {
             wristPosition -= .0038;
         }
@@ -148,7 +142,10 @@ public class MecTeleController extends OpMode
         {
             wristPosition += .0038;
         }
+        telemetry.addData("wrist before:", wristPosition);
         wristPosition = holo.setWristPosition(wristPosition);
+        telemetry.addData("wrist after:", wristPosition);
+        telemetry.update();
         //gamepad 1 button a will toggle platform grabbers
         if (grabberBTNReleased)
         {

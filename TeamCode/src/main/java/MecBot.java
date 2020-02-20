@@ -669,18 +669,8 @@ public class MecBot
             else
             {
                 shoulderDirection = directions.Stop;
+                setShoulderPower(0);
             }
-            /*if (getArmPosition() < extTargetPos)
-            {
-                setArmPower(.6);
-            }
-            else
-            {
-                if (!(getShoulderPosition() < shoulderTargetPos))
-                {
-                    direction = directions.Stop;
-                }
-            }*/
         }
         else if (shoulderDirection == directions.Down)
         {
@@ -692,18 +682,8 @@ public class MecBot
             else
             {
                 shoulderDirection = directions.Stop;
+                setShoulderPower(0);
             }
-            /*if (getArmPosition() > extTargetPos)
-            {
-                setArmPower(-.6);
-            }
-            else
-            {
-                if (!(getShoulderPosition() > shoulderTargetPos))
-                {
-                    direction = directions.Stop;
-                }
-            }*/
         }
 
         if (extDirection == directions.Up)
@@ -711,9 +691,11 @@ public class MecBot
             if (extPos > extTargetPos+extCloseEnough)
             {
                 setArmPower(-.8);
-            } else
+            }
+            else
             {
                 extDirection = directions.Stop;
+                setArmPower(0);
             }
         }
         else if (extDirection == directions.Down)
@@ -724,6 +706,7 @@ public class MecBot
             } else
             {
                 extDirection = directions.Stop;
+                setArmPower(0);
             }
         }
         return shoulderMoved;
@@ -746,7 +729,11 @@ public class MecBot
         }
         return indexing;
     }
-
+    public void cancelIndex ()
+    {
+        shoulderDirection = directions.Stop;
+        extDirection = directions.Stop;
+    }
     public void wristDown (LinearOpMode linearOpMode)
     {
         wristServo.setPosition(0.4);

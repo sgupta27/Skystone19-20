@@ -120,7 +120,11 @@ public class MecTeleController_V2 extends OpMode
             indexingBTNReleased = true;
         }
         double armPower = gamepad2.left_stick_y;
-        holo.setArmPower(armPower);
+        if (Math.abs(armPower) > 0.05)
+        {
+            holo.setArmPower(armPower);
+            holo.cancelIndex();
+        }
 
         //The entire arm pivot controls or shoulder controls
         double shoulderPower_PCT = gamepad2.right_stick_y;
@@ -142,31 +146,30 @@ public class MecTeleController_V2 extends OpMode
             wristFollow = true;
             //wristPosition = Math.abs(shoulderPosition_ENC) * 0.000511 + 0.3986;
             lastShoulderPosition = shoulderPosition_ENC;
+            holo.cancelIndex();
+        }
+        if (holo.isIndexing(telemetry))
+        {
+            if (armPower == 0)
+            {
+                telemetry.addData("not moving either, adj dir", null);
+                shoulderMoved = holo.AdjDir();
+                if (shoulderMoved)
+                {
+                    wristFollow = true;
+                    lastShoulderPosition = shoulderPosition_ENC;
+                }
+            }
+        }
+        else if(shoulderPosition_ENC > lastShoulderPosition)
+        {
+            holo.setShoulderPower(-0.24);
         }
         else
         {
-            if (holo.isIndexing(telemetry))
-            {
-                if (armPower == 0)
-                {
-                    telemetry.addData("not moving either, adj dir", null);
-                    shoulderMoved = holo.AdjDir();
-                    if (shoulderMoved)
-                    {
-                        wristFollow = true;
-                        lastShoulderPosition = shoulderPosition_ENC;
-                    }
-                }
-            }
-            else if(shoulderPosition_ENC > lastShoulderPosition)
-            {
-                holo.setShoulderPower(-0.24);
-            }
-            else
-            {
-                holo.setShoulderPower(0);
-            }
+            holo.setShoulderPower(0);
         }
+
         //  telemetry.addData("shoulder position = ", holo.getShoulderPosition());
         //   telemetry.addData("last shoulder position = ", lastShoulderPosition);
         if (gamepad2.y)

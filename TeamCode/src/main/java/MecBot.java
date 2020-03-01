@@ -658,12 +658,20 @@ public class MecBot
         double shoulderPos = getShoulderPosition();
         int extCloseEnough = 5;
         int shoulderCloseEnough = 5;
+        int shoulderHorizontal = -280;
         boolean shoulderMoved = false;
         if (shoulderDirection == directions.Up)
         {
             if (shoulderPos > shoulderTargetPos+shoulderCloseEnough)
             {
-                setShoulderPower(-.4);
+                if (shoulderPos < shoulderHorizontal) //less then horizontal is above horizontal on robot
+                {
+                    setShoulderPower(-.5);
+                }
+                else
+                {
+                    setShoulderPower(-.4);
+                }
                 shoulderMoved = true;
             }
             else

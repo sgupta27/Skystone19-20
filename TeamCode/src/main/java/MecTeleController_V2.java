@@ -148,18 +148,18 @@ public class MecTeleController_V2 extends OpMode
             lastShoulderPosition = shoulderPosition_ENC;
             holo.cancelIndex();
         }
-        if (holo.isIndexing(telemetry))
+        else if (holo.isIndexing(telemetry))
         {
-            if (armPower == 0)
-            {
-                telemetry.addData("not moving either, adj dir", null);
+            //if (armPower == 0)
+            //{
+            //    telemetry.addData("not moving either, adj dir", null);
                 shoulderMoved = holo.AdjDir();
                 if (shoulderMoved)
                 {
                     wristFollow = true;
                     lastShoulderPosition = shoulderPosition_ENC;
                 }
-            }
+            //}
         }
         else if(shoulderPosition_ENC > lastShoulderPosition)
         {

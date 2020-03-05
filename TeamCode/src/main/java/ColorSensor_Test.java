@@ -9,7 +9,7 @@ import android.graphics.Color;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@Disabled()
+@TeleOp(name = "ColoSensor_Test")
 public class ColorSensor_Test extends OpMode
 {
     //  private OmniDriveBot robot = new OmniDriveBot();

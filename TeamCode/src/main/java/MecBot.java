@@ -540,7 +540,7 @@ public class MecBot
 //            driveLeftFront.setPower(.8);
 //            driveLeftBack.setPower(-.8);
 
-        float encoders_count = (float) (87.38*Math.abs(dist_in) - 114.96); //22.62x -13.02      29.61x-8.462     91.83x  - 63.03
+        float encoders_count = (float) (69.55*Math.abs(dist_in) - 84.56); //ultrplanetary.V1: 87.38x - 114.96   22.62x -13.02      29.61x-8.462     91.83x  - 63.03
 
        // systemAccess.telemetry.addData("power", pow);
        // systemAccess.telemetry.update();
@@ -577,7 +577,7 @@ public class MecBot
             {
                 holonomic(0, -pow, 0, 1);
             }
-            float encoders_count = (float) (99.32 * Math.abs(dist_togo_in) - 36.94); //corehex comp:24.83x - 7.55     CoreHex practice:32.74x - 14.72
+            float encoders_count = (float) (78.37* Math.abs(dist_togo_in) - 82.21); //ultrplanetary.V1: 99.32x - 36.94 corehex comp:24.83x - 7.55     CoreHex practice:32.74x - 14.72
 
             while (linearOpMode.opModeIsActive() && Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count) {
 
@@ -598,7 +598,7 @@ public class MecBot
             holonomic(pow,0,0,1);
         }
 
-        float encoders_count = (float) (20.474 * Math.abs(angle_deg) + 47.1804); //6.57x - 12.24    7.339x+8.147
+        float encoders_count = (float) (16.72* Math.abs(angle_deg) + 67.63); //ultrplanetary.V1: 20.474x + 47.1804    6.57x - 12.24    7.339x+8.147
 
         while (linearOpMode.opModeIsActive() && Math.abs(driveRightFront.getCurrentPosition()) < encoders_count && Math.abs(driveLeftBack.getCurrentPosition()) < encoders_count && Math.abs(driveRightBack.getCurrentPosition()) < encoders_count && Math.abs(driveLeftFront.getCurrentPosition()) < encoders_count)
         {
@@ -755,20 +755,20 @@ public class MecBot
     public void grabStone(LinearOpMode linearOpMode)
     {
         wristServo.setPosition(0.4);
-        linearOpMode.sleep(500);
+        linearOpMode.sleep(750);
         clamp(true);
-        linearOpMode.sleep(500);
+        linearOpMode.sleep(750);
         wristServo.setPosition(0);
-        linearOpMode.sleep(700);
+        linearOpMode.sleep(1200);
     }
     public void dropStone(LinearOpMode linearOpMode)
     {
         wristServo.setPosition(0.1);
         clamp(false);
-        linearOpMode.sleep(500);
+        linearOpMode.sleep(750);
         wristServo.setPosition(0);
         clamp(true);
-        linearOpMode.sleep(700);
+        linearOpMode.sleep(1000);//original 700
     }
     public double setWristPosition (double wristPosition)
     {
@@ -1025,7 +1025,7 @@ public class MecBot
         float initialEncoderCount = driveRightFront.getCurrentPosition();
         float currentEncoderCount = 0;
 
-        wristServo.setPosition(0.35); //drops wrist before goes forward to avoid the plate from hitting the blocks when trying to pick up the blocks
+        wristServo.setPosition(0.33); //drops wrist before goes forward to avoid the plate from hitting the blocks when trying to pick up the blocks
         linearOpMode.sleep(600);
         DistanceSensor usingDistSensor = frontDistSens;
         holonomic(0,0,.2, 1);

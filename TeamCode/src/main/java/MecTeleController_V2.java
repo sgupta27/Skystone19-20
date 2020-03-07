@@ -125,6 +125,10 @@ public class MecTeleController_V2 extends OpMode
             holo.setArmPower(armPower);
             holo.cancelIndex();
         }
+        else if (!holo.isIndexing(telemetry))
+        {
+            holo.setArmPower(0);
+        }
 
         //The entire arm pivot controls or shoulder controls
         double shoulderPower_PCT = gamepad2.right_stick_y;
@@ -176,16 +180,19 @@ public class MecTeleController_V2 extends OpMode
         {
             wristPosition = 0;
             wristFollow = false;
+            holo.cancelIndex();
         }
         else if (gamepad2.right_bumper) //wrist code from last year
         {
             wristPosition -= .0038;
             wristFollow = false;
+            holo.cancelIndex();
         }
         else if (gamepad2.right_trigger > .2f)
         {
             wristPosition += .0038;
             wristFollow = false;
+            holo.cancelIndex();
         }
         if (wristFollow)
         {
@@ -225,10 +232,12 @@ public class MecTeleController_V2 extends OpMode
         if (gamepad2.left_bumper)
         {
             holo.clamp(false);
+            holo.cancelIndex();
         }
         else if (gamepad2.left_trigger > .2f)
         {
             holo.clamp(true);
+            holo.cancelIndex();
         }
         telemetry.update();
     }

@@ -666,7 +666,7 @@ public class MecBot
             {
                 if (shoulderPos < shoulderHorizontal) //less then horizontal is above horizontal on robot
                 {
-                    setShoulderPower(-.5);
+                    setShoulderPower(-.6);
                 }
                 else
                 {

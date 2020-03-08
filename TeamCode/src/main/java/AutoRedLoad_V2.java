@@ -12,7 +12,7 @@ public class AutoRedLoad_V2 extends LinearOpMode
         holo = new MecBot(hardwareMap, this);
         holo.setLightsColor(RevBlinkinLedDriver.BlinkinPattern.RED);
         waitForStart();
-        //competition ready for Wapakoneta
+        //competition ready for States
 
         //red loading side, robot facing the cubes in the middle, outside of the left wheels lined
         //up with the outside edge closer to the build zone of the second square from the audience side
